@@ -4,6 +4,13 @@ const express = require('express')
 const app=express()
 app.use(express.json())
 
+const cors = require('cors')
+app.use(cors({
+    origin: 'http://localhost',
+    methods: ['POST'],
+    allowedHeaders: ['Content-Type']
+  }));
+
 const con=new Client({
     host:"localhost",
     user:"postgres",
