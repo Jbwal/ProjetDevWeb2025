@@ -6,8 +6,6 @@
 </head>
 <body>
     <form id="MyForm" action="http://localhost:3000/postData" method="post">
-        <label for="id">ID :</label>
-        <input type="text" id="id" name="id" required><br><br>
 
         <label for="login">Login :</label>
         <input type="text" id="login" name="login" required><br><br>
@@ -26,7 +24,6 @@
             e.preventDefault(); // Empêche l'envoi normal du formulaire
         
             const data = {
-                id: document.getElementById('id').value,
                 login: document.getElementById('login').value,
                 email: document.getElementById('email').value,
                 password: document.getElementById('password').value
