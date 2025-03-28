@@ -23,10 +23,10 @@ const con=new Client({
 con.connect().then(()=> console.log("connected"))
 
 app.post('/postData',(req,res)=>{
-    const{id,login,email,password} = req.body
+    const{login,email,password} = req.body
 
-    const insert_query = 'INSERT INTO public."UserHotel" (id,login,email,password) VALUES ($1,$2,$3,$4)'
-    con.query(insert_query, [id,login,email,password],(err,result)=>{
+    const insert_query = 'INSERT INTO public."UserHotel" (login,email,password) VALUES ($1,$2,$3)'
+    con.query(insert_query, [login,email,password],(err,result)=>{
         if(err)
             {
                 res.send(err)
