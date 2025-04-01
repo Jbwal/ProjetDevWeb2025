@@ -1,35 +1,55 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <link rel="stylesheet" type = "text/css" href ="accueil.css">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accueil</title>
-    
+    <title>Hotel</title>
+    <link rel="stylesheet" href="accueil.css">
+    <style type="text/css">
+        html{
+            scroll-behavior: smooth;
+        }
+    </style>
 </head>
-<body class = gris>
-    <table class = droite>
-        <tr>
-            <td>
-            <!--<div class = gauche>-->
-                <!-- à voir si on laisse ou pas 
-                 <input type ="button" name ="Bouton1" value ="Mon profil" />
-            -->
-            <input type ="button" name ="Bouton1" value ="Inscription" />
-            </td>    
-            <!--</div>-->
-            <td> 
-    <!--<div class = centre>-->
-                <input type ="button" name ="Bouton2" value ="Connexion" /><a href="H:\Desktop\ProjetDevWeb2025\accueil" target ="_blank"></a>
-    <!--</div>-->
-            </td>
-        </tr>
-    </table>
-    <H1 class = centre>Bienvenue !</H1><br> 
-    <H2><b> Actualités :</b></H2>
-    <p> " Liste d'actualités "  </p><br>
-    <H3><b> "Appareils connectés :" (A voir si on les met sur la page d'acceuil sans connexion)</b></H3>
-    <p>"Listes d'appareils connectés" </p>
-    
+<body>
+
+    <div class="main">
+        <section class="navbar">
+        <div class="navbar">
+            <div class="icon">
+                <h2 class="logo"><a href="accueil.html" class="icon">Logo</a></h2>
+            </div>
+
+            <div class="menu">
+                <ul>
+                    <li><a href="accueil.html">ACCUEIL</a></li>
+                    <li><a href="à_propos.html">À PROPOS</a></li>
+                    <li><a href="service.html">SERVICE</a></li>
+                    <li><a href="#">DESIGN</a></li>
+                    <li><a href="accueil.html#contact">CONTACT</a></li>
+                    <li><a href="connexion.html">CONNEXION</a></li>
+                </ul>
+            </div>
+
+            <div class="search">
+                <input class="srch" type="search" name="" placeholder="Tapez pour rechercher">
+                <a href="#"> <button class="btn">Rechercher</button></a>
+            </div>
+
+        </div> 
+        </section>
+        <div class="content">
+            <h1>Conception & <br><span>Développement</span> <br>Web</h1>
+            <p class="par">L'hotel est un établissement moderne qui met l'accent sur la technologie et <p class="par">le confort de ses clients. 
+                Son site web a été conçu pour offrir une expérience </p><p class="par">fluide, 
+                intuitive et immersive grâce à des connectiques améliorées et des <p class="par">fonctionnalités intelligentes.</p></p></p>
+
+                <button class="cn"><a href="connexion.html">REJOIGNEZ-NOUS</a></button>
+        </div>
+        <section class ="contact" id="contact">
+            <div>
+
+            </div>
+        </section>  
+    </div>
+    <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
 </body>
 </html>

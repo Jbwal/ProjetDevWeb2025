@@ -1,4 +1,284 @@
-.centre{text-align: center;}
-.gris{background-color: rgb(117, 115, 115);}
-.gauche{text-align: left;}
-.droite{margin-left: auto;}
+*{
+    margin: 0;
+    padding: 0;
+
+}
+
+.main{
+        margin: 0;
+        padding: 0;
+        height: 100vh; 
+        background-image: url(ricardo-gomez-angel-u_vys8mmkbI-unsplash.png); 
+        background-size: cover; 
+        background-position: center 20%; 
+        background-repeat: no-repeat; 
+        background-attachment: fixed; 
+    
+}
+
+.navbar{
+    width: 100%;
+    height: 75px;
+    margin: auto;
+    background-color: rgba(169, 169, 169, 0.3); 
+}
+
+.icon{
+    width: 200px;
+    float: left;
+    height: 70px;
+}
+
+.logo{
+    font-size: 35px;
+    font-family: Arial;
+    padding-left: 20px;
+    float: left;
+    padding-top: 10px;
+    margin-top: 5px
+}
+
+.logo a{
+    text-decoration: none;
+    color: #0066ff;
+}
+
+.menu{
+    width: 400px;
+    float: left;
+    height: 75px;
+}
+
+ul{
+    float: left;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+ul li{
+    list-style: none;
+    margin-left: 25px;
+    margin-top: 0px;
+    font-size: 18px;
+    padding: 20px;
+}
+
+ul li a{
+    text-decoration: none;
+    color: #fff;
+    font-family: Arial;
+    font-weight: bold;
+    transition: 0.4s ease-in-out;
+}
+
+ul li a:hover{
+    color: #0066ff;
+}
+
+.search {
+    width: 330px;
+    position: absolute;
+    right: 0; 
+    top: 0; 
+    margin-top: 5px;
+}
+.srch{
+    font-family: 'Times New Roman';
+    width: 200px;
+    height: 40px;
+    background: transparent;
+    border: 1px solid #0066ff;
+    margin-top: 13px;
+    color: #fff;
+    border-right: none;
+    font-size: 16px;
+    float: left;
+    padding: 10px;
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+}
+
+.btn{
+    width: 100px;
+    height: 40px;
+    background: #0066ff;
+    border: 2px solid #0066ff;
+    margin-top: 13px;
+    color: #fff;
+    font-size: 15px;
+    border-bottom-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    transition: 0.2s ease;
+    cursor: pointer;
+}
+.btn:hover{
+    color: #000;
+}
+
+.btn:focus{
+    outline: none;
+}
+
+.srch:focus{
+    outline: none;
+}
+
+.content{
+    width: 1200px;
+    height: auto;
+    margin: auto;
+    color: #fff;
+    position: relative;
+}
+
+.content .par{
+    color: #ffffff;
+    padding-left: 20px;
+    padding-bottom: 25px;
+    font-family: Arial;
+    letter-spacing: 1.2px;
+    line-height: 15px;
+}
+
+.content h1{
+    font-family: 'Times New Roman';
+    font-size: 50px;
+    padding-left: 20px;
+    margin-top: 9%;
+    letter-spacing: 2px;
+}
+
+.content .cn{
+    width: 160px;
+    height: 40px;
+    background: #0066ff;
+    border: none;
+    margin-bottom: 10px;
+    margin-left: 20px;
+    font-size: 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: .4s ease;
+    
+}
+
+.content .cn a{
+    text-decoration: none;
+    color: #000;
+    transition: .3s ease;
+}
+
+.cn:hover{
+    background-color: #fff;
+}
+
+.content span{
+    color: #0066ff;
+    font-size: 65px
+}
+
+.form {
+    width: 400px;
+    height: 500px; 
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0.8) 50%);
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    padding: 30px; 
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+}
+
+.form h2{
+    width: 380px;
+    font-family: sans-serif;
+    text-align: center;
+    color: #0066ff;
+    font-size: 32px;
+    background-color: #fff;
+    border-radius: 10px;
+    margin: 2px;
+    padding: 8px;
+}
+
+.form input{
+    width: 395px;
+    height: 35px;
+    background: transparent;
+    border-bottom: 1px solid #0066ff;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    color: #fff;
+    font-size: 15px;
+    letter-spacing: 1px;
+    margin-top: 30px;
+    font-family: sans-serif;
+}
+
+.form input:focus{
+    outline: none;
+}
+
+::placeholder{
+    color: #fff;
+    font-family: Arial;
+}
+
+.btnn{
+    width: 300px;
+    height: 40px;
+    background: #0066ff;
+    border: none;
+    margin-top: 30px;
+    font-size: 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    color: #fff;
+    transition: 0.4s ease;
+    margin-left: 50px;
+}
+.btnn:hover{
+    background: #fff;
+    color: #0066ff;
+}
+.btnn a{
+    text-decoration: none;
+    color: #000;
+    font-weight: bold;
+}
+.form .link{
+    color:#fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 17px;
+    padding-top: 20px;
+    text-align: center;
+}
+.form .link a{
+    text-decoration: none;
+    color: #0066ff;
+}
+.liw{
+    padding-top: 15px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+.icons a{
+    text-decoration: none;
+    color: #fff;
+}
+.icons ion-icon{
+    color: #fff;
+    font-size: 30px;
+    padding-left: 14px;
+    padding-top: 5px;
+    transition: 0.3s ease;
+}
+.icons ion-icon:hover{
+    color: #0066ff;
+}
+
+
+
