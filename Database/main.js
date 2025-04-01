@@ -1,8 +1,37 @@
 const {Client}=require('pg')
+const { pool } = require("./dbConfig")
 const express = require('express')
+const bcrypt = require('bcrypt')
+const session = require('express-session')
+const flash = require('express-flash')
+const passport = require('passport')
+
+const initializePassport = require('./passportConfig')
+
+initializePassport(passport)
 
 const app=express()
+app.set('view engine', 'ejs')
 app.use(express.json())
+app.use(express.urlencoded({ extended: false }));
+
+app.use(session({
+    secret: 'secret',
+
+    resave: false,
+
+    saveUninitialized: false
+}))
+app.use(passport.initialize())
+app.use(passport.session())
+
+app.use(flash())
+app.use((req, res, next) => {
+    res.locals.messages = req.flash();
+    next();
+});
+
+
 
 const cors = require('cors')
 app.use(cors({
@@ -22,22 +51,76 @@ const con=new Client({
 
 con.connect().then(()=> console.log("connected"))
 
-app.post('/postData',(req,res)=>{
-    const{login,email,password} = req.body
+app.post('/postData', async (req,res)=>{
+    const{login,email,password, password2} = req.body
 
-    const insert_query = 'INSERT INTO public."UserHotel" (login,email,password) VALUES ($1,$2,$3)'
-    con.query(insert_query, [login,email,password],(err,result)=>{
-        if(err)
-            {
-                res.send(err)
-            }else{
-                console.log(result)
-                res.send("POSTED DATA")
+    let errors = []
+
+    if(!login || !email || !password || !password2) {
+        errors.push({ message: "Entrez tout les champs s'il vous plaît"})
+    }
+
+    if(password.length < 6){
+        errors.push({ message: "Le mot de passe doit faire au moins 6 caractères"})
+    }
+
+    if(password != password2){
+        errors.push({ message: "Les mots de passes entrés sont différents"})
+    }
+
+    if(errors.length > 0 ){
+        return res.render('register', {errors})
+    }else{
+        //pas d'erreurs => on valide le formulaire
+
+
+        let hashedPassword = await bcrypt.hash(password, 10)
+        console.log(hashedPassword)
+
+
+                // 1. Vérifie login
+        con.query('SELECT * FROM public."UserHotel" WHERE login = $1', [login], (err, result) => {
+            if (err) return res.send(err);
+
+            if (result.rows.length > 0) {
+                return res.render('register', {
+                    errors: [{ message: "Ce login est déjà utilisé" }]
+                });
             }
 
+            // verif mail
+            con.query('SELECT * FROM public."UserHotel" WHERE email = $1', [email], (err, result) => {
+                if (err) return res.send(err);
 
-    })
+                if (result.rows.length > 0) {
+                    return res.render('register', {
+                        errors: [{ message: "Cet email est déjà utilisé" }]
+                    });
+                }
+
+                // hash mdp et insert
+                bcrypt.hash(password, 10, (err, hashedPassword) => {
+                    if (err) return res.send(err);
+
+                    const insert_query = 'INSERT INTO public."UserHotel" (login,email,password) VALUES ($1,$2,$3)';
+                    con.query(insert_query, [login, email, hashedPassword], (err, result) => {
+                        if (err) return res.send(err);
+
+                        req.flash("success_msg","Vous êtes inscrits")
+                        res.redirect('/users/login')
+                    });
+                });
+            });
+        });
+    }
 })
+
+app.post('/users/login', passport.authenticate('local', {
+    successRedirect: '/users/dashboard',
+
+    failureRedirect: '/users/login',
+    failureFlash: true
+}))
 
 app.get('/fetchData',(req,res)=>{
 
@@ -98,6 +181,32 @@ app.delete('/delete/:id',(req,res)=>{
 app.listen(3000,()=>{
     console.log("Server is running...")
 })
+
+
+app.get('/', (req,res) => {
+    res.render('index')
+})
+
+app.get('/users/register', (req,res)=>{
+    res.render('register', {errors: []})
+})
+
+app.get('/users/login', (req,res)=>{
+    res.render('login')
+})
+
+app.get('/users/dashboard', (req,res)=>{
+    res.render('dashboard', {user: req.user.login})
+})
+
+app.get("/users/logout", (req,res) => {
+    req.logOut(function(err) {
+        if (err) { return next(err); }
+        req.flash("success_msg", "You have successfully logged out.");
+        res.redirect("/users/login");
+    });
+});
+
 
 /*con.query('Select * from userdemo',(err,res)=>{
     if(!err)

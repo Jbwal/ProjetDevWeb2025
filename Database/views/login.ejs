@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+    
+    <ul>
+        <% if (messages.success_msg) { %>
+            <% messages.success_msg.forEach(function(msg) { %>
+                <li><%= msg %></li>
+            <% }); %>
+        <% } %>
+    </ul>
+
+
+    <ul>
+        <% if (messages.error) { %>
+            <% messages.error.forEach(function(msg) { %>
+                <li><%= msg %></li>
+            <% }); %>
+        <% } %>
+    </ul>
+
+    <ul>
+        <% if (messages.error || messages.error_msg) { %>
+            <% (messages.error || []).forEach(function(msg) { %>
+                <li><%= msg %></li>
+            <% }); %>
+            <% (messages.error_msg || []).forEach(function(msg) { %>
+                <li><%= msg %></li>
+            <% }); %>
+        <% } %>
+    </ul>
+    <form id="MyForm" action="/users/login" method="post">
+
+        <label for="email">Email :</label>
+        <input type="text" id="email" name="email" required><br><br>
+
+        <label for="password">Mot de passe :</label>
+        <input type="password" id="password" name="password" required><br><br>
+        
+        <button type="submit">Connexion</button>
+
+        <a href="/users/register">Pas de compte ? Inscrivez vous</a>
+    </form>
+
+</body>
+</html>
