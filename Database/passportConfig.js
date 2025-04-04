@@ -8,13 +8,16 @@ function initialized(passport){
 
         con.query(
             `SELECT * FROM public."UserHotel" WHERE email = $1`,[email],(err,result)=>{
-                if(err) return result.send(err)
+                if(err) return done(err)
 
-                console.log(result.rows)
 
                 if(result.rows.length > 0){
                     const user = result.rows[0]
 
+                    if (!user.is_verified) {
+                        return done(null, false, { message: "Veuillez vérifier votre email avant de vous connecter." });
+                    }
+                
                     bcrypt.compare(password, user.password, (err,isMatch) =>{
                         if(err) return result.send(err)
 

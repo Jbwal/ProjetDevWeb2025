@@ -5,6 +5,8 @@ const bcrypt = require('bcrypt')
 const session = require('express-session')
 const flash = require('express-flash')
 const passport = require('passport')
+const transporter = require('./Emailconfig')
+const crypto = require('crypto')
 
 const initializePassport = require('./passportConfig')
 
@@ -25,15 +27,19 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 
-app.use(flash())
+app.use(flash());
 app.use((req, res, next) => {
-    res.locals.messages = req.flash();
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error');
     next();
 });
 
 
 
+
 const cors = require('cors')
+const { error } = require('console')
 app.use(cors({
     origin: 'http://localhost',
     methods: ['POST'],
@@ -72,8 +78,8 @@ app.post('/postData', async (req,res)=>{
         return res.render('register', {errors})
     }else{
         //pas d'erreurs => on valide le formulaire
-
-
+        const verificationToken = crypto.randomBytes(32).toString('hex');
+        
         let hashedPassword = await bcrypt.hash(password, 10)
         console.log(hashedPassword)
 
@@ -102,9 +108,18 @@ app.post('/postData', async (req,res)=>{
                 bcrypt.hash(password, 10, (err, hashedPassword) => {
                     if (err) return res.send(err);
 
-                    const insert_query = 'INSERT INTO public."UserHotel" (login,email,password) VALUES ($1,$2,$3)';
-                    con.query(insert_query, [login, email, hashedPassword], (err, result) => {
+                    const insert_query = 'INSERT INTO public."UserHotel" (login,email,password,verification_token) VALUES ($1,$2,$3,$4)';
+                    con.query(insert_query, [login, email, hashedPassword, verificationToken], (err, result) => {
                         if (err) return res.send(err);
+
+                        const verifyLink = `http://localhost:3000/verify-email/${verificationToken}`
+
+                        transporter.sendMail({
+                            from: '"Mon App" <TemplarHotelVerif@gmail.com>',
+                            to: email,
+                            subject: 'Vérifiez votre adresse email',
+                            html: `<p>Cliquez ici pour vérifier votre compte : <a href="${verifyLink}">${verifyLink}</a></p>`
+                        });
 
                         req.flash("success_msg","Vous êtes inscrits")
                         res.redirect('/users/login')
@@ -121,6 +136,28 @@ app.post('/users/login', passport.authenticate('local', {
     failureRedirect: '/users/login',
     failureFlash: true
 }))
+
+app.get('/verify-email/:token', (req, res) => {
+    const { token } = req.params;
+
+    const query = `
+        UPDATE public."UserHotel"
+        SET is_verified = true, verification_token = null
+        WHERE verification_token = $1
+        RETURNING *;
+    `;
+
+    con.query(query, [token], (err, result) => {
+        if (err) return res.send("Erreur de vérification");
+        if (result.rows.length === 0) {
+            return res.send("Lien invalide ou déjà utilisé");
+        }
+
+        res.send("Email vérifié avec succès ! Vous pouvez maintenant vous connecter.");
+    });
+});
+
+
 
 app.get('/fetchData',(req,res)=>{
 
@@ -188,7 +225,10 @@ app.get('/', (req,res) => {
 })
 
 app.get('/users/register', (req,res)=>{
-    res.render('register', {errors: []})
+    res.render('register', {
+        errors: [],
+        success_msg: req.flash('success_msg')
+    })
 })
 
 app.get('/users/login', (req,res)=>{

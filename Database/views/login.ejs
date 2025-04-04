@@ -5,34 +5,34 @@
     <title>Login</title>
 </head>
 <body>
-    
-    <ul>
-        <% if (messages.success_msg) { %>
-            <% messages.success_msg.forEach(function(msg) { %>
-                <li><%= msg %></li>
-            <% }); %>
-        <% } %>
-    </ul>
 
+    <!-- Messages de succès -->
+    <% if (success_msg && success_msg.length > 0) { %>
+        <ul style="color: green;">
+            <% success_msg.forEach(function(msg) { %>
+                <li><%= msg %></li>
+            <% }); %>
+        </ul>
+    <% } %>
 
-    <ul>
-        <% if (messages.error) { %>
-            <% messages.error.forEach(function(msg) { %>
+    <!-- Messages d'erreur -->
+    <% if (error_msg && error_msg.length > 0) { %>
+        <ul style="color: red;">
+            <% error_msg.forEach(function(msg) { %>
                 <li><%= msg %></li>
             <% }); %>
-        <% } %>
-    </ul>
+        </ul>
+    <% } %>
 
-    <ul>
-        <% if (messages.error || messages.error_msg) { %>
-            <% (messages.error || []).forEach(function(msg) { %>
+    <% if (error && error.length > 0) { %>
+        <ul style="color: red;">
+            <% error.forEach(function(msg) { %>
                 <li><%= msg %></li>
             <% }); %>
-            <% (messages.error_msg || []).forEach(function(msg) { %>
-                <li><%= msg %></li>
-            <% }); %>
-        <% } %>
-    </ul>
+        </ul>
+    <% } %>
+
+    <!-- Formulaire de connexion -->
     <form id="MyForm" action="/users/login" method="post">
 
         <label for="email">Email :</label>
@@ -43,8 +43,7 @@
         
         <button type="submit">Connexion</button>
 
-        <a href="/users/register">Pas de compte ? Inscrivez vous</a>
+        <a href="/users/register">Pas de compte ? Inscrivez-vous</a>
     </form>
 
-</body>
-</html>
+</body
