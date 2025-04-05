@@ -7,6 +7,7 @@ const flash = require('express-flash')
 const passport = require('passport')
 const transporter = require('./Emailconfig')
 const crypto = require('crypto')
+const path = require('path')
 
 const initializePassport = require('./passportConfig')
 
@@ -16,6 +17,8 @@ const app=express()
 app.set('view engine', 'ejs')
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }));
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
     secret: 'secret',

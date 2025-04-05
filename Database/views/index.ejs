@@ -1,13 +1,122 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Templar Hotel - Luxe & Élégance</title>
+    <link rel="stylesheet" href="../style/daindex.css">
 </head>
 <body>
-    <h1>Home</h1>
+    <div class="decoration decoration-1"></div>
+    <div class="decoration decoration-2"></div>
+    
+    <!-- Pop-up -->
+    <div class="overlay" id="free-tour-popup">
+        <div class="popup">
+            <button class="btn-close" onclick="closePopup()">&times;</button>
+            <h2 class="popup-title">Accès Limité</h2>
+            <p class="popup-text">Vous êtes en mode "Free Tour". Pour accéder à toutes les fonctionnalités, veuillez vous connecter ou créer un compte.</p>
+            <div class="buttons-container">
+                <button class="btn" onclick="window.location.href='/users/login'">Se connecter</button>
+                <button class="btn btn-outline" onclick="window.location.href='/users/register'">S'inscrire</button>
+                <button class="btn btn-secondary" onclick="closePopup()">Continuer en mode visiteur</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Page d'accueil -->
+    <div class="page active" id="index">
+        <h1 class="logo">Templar Hotel</h1>
+        <p class="subheading">Luxe & Élégance</p>
+        <div class="container">
+            <h1>Bienvenue</h1>
+            <p style="margin-bottom: 2rem; font-size: 0.9rem; line-height: 1.6;">Accédez à notre plateforme de gestion hôtelière exclusive.</p>
+            <div style="display: flex; flex-direction: column; width: 100%;">
+                <button class="btn" onclick="window.location.href='/users/login'">Connexion</button>
+                <button class="btn btn-secondary" onclick="guestAccess()">Visiteur</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Page de connexion -->
+    <div class="page" id="login">
+        <h1 class="logo">Templar Hotel</h1>
+        <p class="subheading">Luxe & Élégance</p>
+        <div class="container">
+            <h1>Connexion</h1>
+            <form>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" required>
+                </div>
+                <div class="form-footer">
+                    <a href="#" class="link" onclick="showPage('register')">Créer un compte</a>
+                    <button type="button" class="btn" onclick="showPage('dashboard')">Se connecter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Page d'inscription -->
+    <div class="page" id="register">
+        <h1 class="logo">Templar Hotel</h1>
+        <p class="subheading">Luxe & Élégance</p>
+        <div class="container">
+            <h1>Inscription</h1>
+            <form>
+                <div class="form-group">
+                    <label for="login">Login</label>
+                    <input type="text" id="login" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-email">Email</label>
+                    <input type="email" id="reg-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-password">Mot de passe</label>
+                    <input type="password" id="reg-password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Confirmer le mot de passe</label>
+                    <input type="password" id="confirm-password" required>
+                </div>
+                <div class="form-footer">
+                    <a href="#" class="link" onclick="showPage('login')">Déjà un compte ?</a>
+                    <button type="button" class="btn" onclick="showPage('dashboard')">S'inscrire</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Page Dashboard -->
+    <div class="page" id="dashboard">
+        <div class="dashboard">
+            <nav class="navbar">
+                <div class="nav-logo">Templar Hotel</div>
+                <ul class="nav-links">
+                    <li><a href="#" class="dashboard-link">Objets</a></li>
+                    <li><a href="#" class="dashboard-link">À propos</a></li>
+                    <li><a href="#" class="dashboard-link">Profil</a></li>
+                    <li><button class="btn btn-outline btn-small" onclick="window.location.href='/users/login'">Connexion</button></li>
+                </ul>
+            </nav>
+            <div class="dashboard-content">
+                <div class="welcome-card">
+                    <h2 class="welcome-title">Bienvenue au Tableau de Bord</h2>
+                    <p class="welcome-text">
+                        Vous êtes connecté au système de gestion du Templar Hotel. Utilisez les options de navigation pour accéder aux différentes fonctionnalités.
+                    </p>
+                </div>
+                <!-- Contenu du dashboard ici -->
+            </div>
+        </div>
+    </div>
 
-    <a href="/users/login">Login</a>
+    
+    <script src="../js/scriptindex.js"></script>
 </body>
 </html>

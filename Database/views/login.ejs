@@ -2,48 +2,66 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Templar Hotel - Connexion</title>
+    <link rel="stylesheet" href="../style/da.css">
 </head>
 <body>
+    <div class="decoration decoration-1"></div>
+    <div class="decoration decoration-2"></div>
+    
+    <div class="page active" id="login">
+        <h1 class="logo">Templar Hotel</h1>
+        <p class="subheading">Luxe & Élégance</p>
+        <div class="container">
+            <h1>Connexion</h1>
+            
+            <!-- Messages de succès -->
+            <% if (success_msg && success_msg.length > 0) { %>
+                <ul class="alert success" style='color:green'>
+                    <% success_msg.forEach(function(msg) { %>
+                        <li><%= msg %></li>
+                    <% }); %>
+                </ul>
+            <% } %>
 
-    <!-- Messages de succès -->
-    <% if (success_msg && success_msg.length > 0) { %>
-        <ul style="color: green;">
-            <% success_msg.forEach(function(msg) { %>
-                <li><%= msg %></li>
-            <% }); %>
-        </ul>
-    <% } %>
+            <!-- Messages d'erreur -->
+            <% if (error_msg && error_msg.length > 0) { %>
+                <ul class="alert error" style='color:red'>
+                    <% error_msg.forEach(function(msg) { %>
+                        <li><%= msg %></li>
+                    <% }); %>
+                </ul>
+            <% } %>
 
-    <!-- Messages d'erreur -->
-    <% if (error_msg && error_msg.length > 0) { %>
-        <ul style="color: red;">
-            <% error_msg.forEach(function(msg) { %>
-                <li><%= msg %></li>
-            <% }); %>
-        </ul>
-    <% } %>
-
-    <% if (error && error.length > 0) { %>
-        <ul style="color: red;">
-            <% error.forEach(function(msg) { %>
-                <li><%= msg %></li>
-            <% }); %>
-        </ul>
-    <% } %>
-
-    <!-- Formulaire de connexion -->
-    <form id="MyForm" action="/users/login" method="post">
-
-        <label for="email">Email :</label>
-        <input type="text" id="email" name="email" required><br><br>
-
-        <label for="password">Mot de passe :</label>
-        <input type="password" id="password" name="password" required><br><br>
-        
-        <button type="submit">Connexion</button>
-
-        <a href="/users/register">Pas de compte ? Inscrivez-vous</a>
-    </form>
-
-</body
+            <% if (error && error.length > 0) { %>
+                <ul class="alert error" style="color:red">
+                    <% error.forEach(function(msg) { %>
+                        <li><%= msg %></li>
+                    <% }); %>
+                </ul>
+            <% } %>
+            
+            <form action="/users/login" method="post">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-footer">
+                    <a href="/users/register" class="link">Pas de compte ? Inscrivez-vous</a>
+                    <button type="submit" class="btn">Se connecter</button>
+                </div>
+                <div class="back-link">
+                    <a href="/" class="link">Retour à l'accueil</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script src="/js/script.js"></script>
+</body>
+</html>
