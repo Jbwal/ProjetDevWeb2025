@@ -1,0 +1,432 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500&display=swap');
+        
+:root {
+    --primary: #9c8861;
+    --dark: #212121;
+    --light: #f8f5f1;
+    --accent: #d4b78f;
+    --transition: all 0.4s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--light);
+    color: var(--dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.page {
+    position: relative; /* au lieu de absolute */
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.page.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem;
+    font-weight: 300;
+    letter-spacing: 4px;
+    margin-bottom: 2rem;
+    color: var(--primary);
+    text-transform: uppercase;
+}
+
+.subheading {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 300;
+    letter-spacing: 2px;
+    margin-bottom: 3rem;
+    color: var(--dark);
+}
+
+.container {
+    background-color: white;
+    padding: 3rem;
+    border-radius: 4px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    width: 100%;
+    max-width: 420px;
+    transition: var(--transition);
+}
+
+/* Style pour les conteneurs d'information */
+.info-container {
+    max-width: 800px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.home-container {
+    text-align: center;
+}
+
+h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: var(--dark);
+}
+
+h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    color: var(--primary);
+}
+
+h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+    color: var(--dark);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.btn {
+    display: inline-block;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: var(--transition);
+    border-radius: 2px;
+    white-space: nowrap;
+}
+
+.btn:hover {
+    background-color: var(--accent);
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+}
+
+.btn-outline:hover {
+    background-color: var(--primary);
+    color: white;
+}
+
+.btn-back {
+    margin-top: 2rem;
+}
+
+.link {
+    display: inline-block;
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.8rem;
+    margin-top: 1rem;
+    transition: var(--transition);
+}
+
+.link:hover {
+    color: var(--accent);
+}
+
+.form-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+}
+
+.back-link {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+/* Navigation buttons sur la page d'accueil */
+.navigation-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.welcome-description {
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    text-align: center;
+}
+
+/* Styles pour les sections d'information */
+.info-section {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.info-section:last-of-type {
+    border-bottom: none;
+}
+
+.info-section p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.feature-list {
+    list-style-type: none;
+    margin-left: 1rem;
+}
+
+.feature-list li {
+    position: relative;
+    padding-left: 1.2rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.feature-list li:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    width: 6px;
+    height: 6px;
+    background-color: var(--primary);
+    border-radius: 50%;
+}
+
+/* Dashboard styles */
+.dashboard {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#news-section {
+    padding-top: 2rem;
+}
+
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 2rem;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    transition: 0.4s;
+}
+
+.nav-logo a {
+    text-decoration: none;
+    color: var(--primary);
+}
+
+.nav-logo:hover {
+    transform: scale(1.05);
+    letter-spacing: 2px;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+}
+
+.nav-links li {
+    margin-left: 4rem;
+}
+
+.nav-links button#connexion:hover {
+    color:#212121;
+    transform: scale(1.1);
+    letter-spacing: 1px;
+}
+
+.nav-links a {
+    color: var(--dark);
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 1px;
+    transition: var(--transition);
+    cursor: pointer;
+    display: flex;
+}
+
+.nav-links a:hover {
+    color: var(--primary);
+    transform: scale(1.1);
+    letter-spacing: 2px;
+}
+
+
+.nav-links a.active {
+    color: var(--primary);
+    font-weight: 500;
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 3px;
+}
+
+.btn-small {
+    padding: 0.4rem 1rem;
+    font-size: 0.8rem;
+}
+
+.dashboard-content {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+    background-color: var(--light);
+}
+
+/* Cartes dans le dashboard */
+.welcome-card, .dashboard-card {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 4px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    margin-bottom: 2rem;
+}
+
+.welcome-title, .dashboard-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+}
+
+.welcome-text, .dashboard-text {
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+
+/* Styles pour les actualités du dashboard */
+.news-item {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.news-item:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.news-date {
+    font-size: 0.8rem;
+    color: var(--primary);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.news-item p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.decoration {
+    position: fixed;
+    width: 300px;
+    height: 300px;
+    background-color: var(--accent);
+    opacity: 0.05;
+    border-radius: 50%;
+    z-index: -1;
+}
+
+.decoration-1 {
+    top: -100px;
+    right: -100px;
+}
+
+.decoration-2 {
+    bottom: -100px;
+    left: -100px;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 2rem;
+    }
+    
+    .navbar {
+        flex-direction: column;
+        padding: 1rem;
+    }
+    
+    .nav-links {
+        margin-top: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .nav-links li {
+        margin: 0.5rem 1rem;
+    }
+    
+    .info-container {
+        max-height: 70vh;
+    }
+}
+
