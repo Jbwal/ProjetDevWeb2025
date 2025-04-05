@@ -22,6 +22,19 @@ function initialized(passport){
                         if(err) return result.send(err)
 
                         if(isMatch){
+                            const now = new Date()
+                            con.query(
+                                `UPDATE public."UserHotel" SET last_login = $1 WHERE email = $2`,
+                                [now,email]
+                            )
+                            con.query(
+                                `UPDATE public."UserHotel" SET "pointsTotal" = "pointsTotal" + 0.25 WHERE email = $1`,
+                                [email]
+                            )
+                            con.query(
+                                `UPDATE public."UserHotel" SET "connectionCount" = "connectionCount" + 1 WHERE email = $1`,
+                                [email]
+                            )
                             return done(null,user)
                         }else{
                             return done(null,false,{message: "Le mot de passe est incorrect"})
