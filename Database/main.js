@@ -237,22 +237,47 @@ app.get('/fetchbyId/:id',(req,res)=>{
     })
 })
 
-app.put('/update/:id',(req,res)=>{
+app.post('/update/:id', async (req, res) => {
     const id = req.params.id
-    const login = req.body.login
+    const { firstName, lastName, age, gender, birthDate, password } = req.body
 
-    const update_query = 'UPDATE public."UserHotel" SET login=$1 WHERE id=$2'
+    try {
+        let update_query = `
+            UPDATE public."UserHotel" SET
+            "firstName" = $1,
+            "lastName" = $2,
+            age = $3,
+            gender = $4,
+            "birthDate" = $5`
+        
+        const params = [firstName, lastName, age, gender, birthDate]
 
-    con.query(update_query,[login,id],(err,result)=>{
-        if(err)
-            {
-                res.send(err)
-            }else{
-                res.send("UPDATED")
-                res.send(result)
+        if (password && password.trim() !== "") {
+            const hashedPassword = await bcrypt.hash(password, 10)
+            update_query += `, "password" = $6`
+            params.push(hashedPassword)
+        }
+
+        update_query += ` WHERE id = $${params.length + 1}`
+        params.push(id)
+
+        con.query(update_query, params, (err, result) => {
+            if (err) {
+                req.flash('error_msg', 'Erreur lors de la mise à jour.')
+                return res.redirect('/users/profil')
             }
-    })
+
+            req.flash('success_msg', 'Profil mis à jour avec succès !')
+            res.redirect('/users/profil')
+        })
+
+    } catch (error) {
+        console.error(error);
+        req.flash('error_msg', 'Une erreur est survenue.')
+        res.redirect('/users/profil')
+    }
 })
+
 
 app.delete('/delete/:id',(req,res)=>{
     const id = req.params.id
@@ -297,6 +322,14 @@ app.get('/users/dashboardComplexe', (req,res)=>{
 
 app.get('/users/dashboardAdmin', (req,res)=>{
     res.render('dashboardAdmin', {user: req.user})
+})
+
+app.get('/users/profil', (req,res)=>{
+    res.render('profil.ejs', {user: req.user})
+})
+
+app.get('/users/modifProfil', (req,res)=>{
+    res.render('modifProfil.ejs', {user: req.user})
 })
 
 app.get("/users/logout", (req,res) => {

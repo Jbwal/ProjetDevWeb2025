@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil</title>
+</head>
+<body>
+
+    <a href="/users/logout">Deconnexion</a>
+
+    <% if (success_msg) { %>
+        <div style="color: green;"><%= success_msg %></div>
+    <% } %>
+
+    <h1>Profil de <%=user.login%></h1>
+    <h3>Prenom : <%=user.firstName%></h3>
+    <h3>Nom : <%=user.lastName%></h3>
+    <h3>Age : <%=user.age%></h3>
+    <h3>Genre : <%=user.gender%></h3>
+    <h3>Date de naissance : <%=new Date(user.birthDate).toLocaleDateString('fr-FR')%></h3>
+    <h3>Dernière connexion : <%=new Date(user.last_login).toLocaleString('fr-FR')%></h3>
+
+    <a href="/users/modifProfil">Modifier le profil</a>
+    
+</body>
+</html>
