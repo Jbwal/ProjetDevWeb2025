@@ -134,11 +134,60 @@ app.post('/postData', async (req,res)=>{
 })
 
 app.post('/users/login', passport.authenticate('local', {
-    successRedirect: '/users/dashboard',
-
     failureRedirect: '/users/login',
     failureFlash: true
-}))
+}), (req,res) =>{
+    const email = req.user.email
+    const now = new Date()
+    con.query(
+        `UPDATE public."UserHotel" SET last_login = $1 WHERE email = $2`,
+        [now,email]
+    )
+    con.query(
+        `UPDATE public."UserHotel" SET "pointsTotal" = "pointsTotal" + 0.25 WHERE email = $1`,
+        [email]
+    )
+    con.query(
+        `UPDATE public."UserHotel" SET "connectionCount" = "connectionCount" + 1 WHERE email = $1`,
+        [email]
+    )
+
+    const result = con.query(`
+    SELECT "pointsTotal", "userType" FROM public."UserHotel" WHERE "email" = $1`,
+    [email],(err,result)=>{
+        if(err) return result.send(err)
+
+        if (result.rows.length > 0) {
+            const { pointsTotal, userType } = result.rows[0]
+            let newType = userType
+            if (pointsTotal >= 5000 && userType !== 'admin') {
+                newType = 'admin';
+            } else if (pointsTotal >= 1000 && userType !== 'complexe' && userType !== 'admin') {
+                newType = 'complexe';
+            }
+            if (newType !== userType) {
+                con.query(`
+                    UPDATE "UserHotel" SET "userType" = $1 WHERE "email" = $2`, 
+                    [newType, email]
+            )
+                console.log(`Utilisateur promu : ${userType} → ${newType}`);
+        }
+    }
+})
+    const result2 = con.query(
+        `SELECT "userType" FROM public."UserHotel" WHERE email = $1`,
+        [email],(err,result)=>{
+            const userType = result.rows[0].userType
+
+            if (userType === 'simple') {
+                return res.redirect('dashboardSimple')
+            } else if (userType === 'complexe') {
+                return res.redirect('dashboardComplexe')
+            } else if (userType === 'admin') {
+                return res.redirect('dashboardAdmin')
+            }
+    })
+})
 
 app.get('/verify-email/:token', (req, res) => {
     const { token } = req.params;
@@ -238,8 +287,16 @@ app.get('/users/login', (req,res)=>{
     res.render('login')
 })
 
-app.get('/users/dashboard', (req,res)=>{
-    res.render('dashboard', {user: req.user.login})
+app.get('/users/dashboardSimple', (req,res)=>{
+    res.render('dashboardSimple', {user: req.user})
+})
+
+app.get('/users/dashboardComplexe', (req,res)=>{
+    res.render('dashboardComplexe', {user: req.user})
+})
+
+app.get('/users/dashboardAdmin', (req,res)=>{
+    res.render('dashboardAdmin', {user: req.user})
 })
 
 app.get("/users/logout", (req,res) => {

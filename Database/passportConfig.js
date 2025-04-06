@@ -15,26 +15,13 @@ function initialized(passport){
                     const user = result.rows[0]
 
                     if (!user.is_verified) {
-                        return done(null, false, { message: "Veuillez vérifier votre email avant de vous connecter." });
+                        return done(null, false, { message: "Veuillez vérifier votre email avant de vous connecter." })
                     }
                 
                     bcrypt.compare(password, user.password, (err,isMatch) =>{
                         if(err) return result.send(err)
 
                         if(isMatch){
-                            const now = new Date()
-                            con.query(
-                                `UPDATE public."UserHotel" SET last_login = $1 WHERE email = $2`,
-                                [now,email]
-                            )
-                            con.query(
-                                `UPDATE public."UserHotel" SET "pointsTotal" = "pointsTotal" + 0.25 WHERE email = $1`,
-                                [email]
-                            )
-                            con.query(
-                                `UPDATE public."UserHotel" SET "connectionCount" = "connectionCount" + 1 WHERE email = $1`,
-                                [email]
-                            )
                             return done(null,user)
                         }else{
                             return done(null,false,{message: "Le mot de passe est incorrect"})
