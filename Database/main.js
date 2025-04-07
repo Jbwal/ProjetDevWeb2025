@@ -213,13 +213,23 @@ app.get('/verify-email/:token', (req, res) => {
 
 app.get('/fetchData',(req,res)=>{
 
-    const fetch_query = 'SELECT * FROM public."UserHotel"'
+    const sortField = req.query.sort || 'id'
+    const sortOrder = req.query.order || 'asc'
+
+    const allowedFields = ['id', 'pointsTotal']
+    const allowedOrders = ['asc', 'desc']
+
+    if (!allowedFields.includes(sortField) || !allowedOrders.includes(sortOrder)) { // pour éviter injections sql
+        return res.status(400).send('Paramètres de tri invalides.');
+    }
+
+    const fetch_query = `SELECT * FROM public."UserHotel" ORDER BY "${sortField}" ${sortOrder}`
     con.query(fetch_query,(err,result)=>{
         if(err)
             {
                 res.send(err)
             }else{
-                res.send(result.rows)
+                res.render('listeUtilisateurs', { users: result.rows })
             }
     })
 })
@@ -278,6 +288,35 @@ app.post('/update/:id', async (req, res) => {
     }
 })
 
+app.post('/updatePoints/:id', (req, res) => {
+    const id = req.params.id
+    const newPoints = parseFloat(req.body.points)
+
+    con.query(
+        `UPDATE public."UserHotel" SET "pointsTotal" = $1 WHERE id = $2`,
+        [newPoints, id],
+        (err) => {
+            if (err) return res.status(500).send("Erreur mise à jour des points.")
+
+            let newType = 'simple'
+            if (newPoints >= 5000) {
+                newType = 'admin'
+            } else if (newPoints >= 1000) {
+                newType = 'complexe'
+            }
+
+            con.query(
+                `UPDATE public."UserHotel" SET "userType" = $1 WHERE id = $2`,
+                [newType, id],
+                (err2) => {
+                    if (err2) return res.status(500).send("Erreur mise à jour du rôle.")
+
+                    res.status(200).send("Points et rôle mis à jour !")
+                }
+            )
+        }
+    )
+})
 
 app.delete('/delete/:id',(req,res)=>{
     const id = req.params.id

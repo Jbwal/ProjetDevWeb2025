@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des utilisateurs</title>
+    <style>
+        table { border-collapse: collapse; width: 80%; margin: auto; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        th { background-color: #f0f0f0; }
+        h1 { text-align: center; margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <h1>Liste des Utilisateurs</h1>
+
+    <div style="text-align: center; margin-bottom: 20px;">
+        <a href="/fetchData?sort=id&order=asc">Trier par ID ↑</a> |
+        <a href="/fetchData?sort=id&order=desc">Trier par ID ↓</a> |
+        <a href="/fetchData?sort=pointsTotal&order=asc">Trier par points ↑</a> |
+        <a href="/fetchData?sort=pointsTotal&order=desc">Trier par points ↓</a>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Login</th>
+                <th>Email</th>
+                <th>Type</th>
+                <th>Points</th>
+                <th>Dernière connexion</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% users.forEach(user => { %>
+                <tr>
+                    <td><%= user.id %></td>
+                    <td><%= user.login %></td>
+                    <td><%= user.email %></td>
+                    <td><%= user.userType %></td>
+                    <td><%= user.pointsTotal %></td>
+                    <td><%=new Date(user.last_login).toLocaleString('fr-FR')%></td>
+                    <td>
+                        <button class="delete-btn" data-id="<%= user.id %>">Supprimer</button>
+                        <form class="update-form" data-id="<%= user.id %>">
+                            <input type="number" name="points" value="<%= user.pointsTotal %>" step="0.25" min="0" />
+                            <button type="submit">Modifier</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+
+    <script>
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', async () => {
+                const userId = button.dataset.id
+                const confirmDelete = confirm("Es-tu sûr de vouloir supprimer cet utilisateur ?")
+        
+                if (confirmDelete) {
+                    const response = await fetch(`/delete/${userId}`, {
+                        method: 'DELETE'
+                    });
+        
+                    if (response.ok) {
+                        // supprimer ligne
+                        button.closest('tr').remove()
+                        
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        // message flash
+                        const flash = document.createElement('div')
+                        flash.textContent = "Utilisateur supprimé avec succès !"
+                        flash.style.background = "green"
+                        flash.style.color = "white"
+                        flash.style.padding = "10px"
+                        flash.style.textAlign = "center"
+                        flash.style.margin = "10px auto"
+                        flash.style.width = "50%"
+        
+                        document.body.prepend(flash)
+        
+                        setTimeout(() => flash.remove(), 3000)
+                    } else {
+                        alert("Une erreur est survenue lors de la suppression.")
+                    }
+                }
+            })
+        })
+
+        document.querySelectorAll('.update-form').forEach(form => {
+        form.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const userId = this.dataset.id;
+        const points = this.querySelector('input[name="points"]').value;
+
+        fetch(`/updatePoints/${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ points })
+        })
+        .then(res => {
+            if (!res.ok) throw new Error("Erreur serveur");
+            return res.text();
+        })
+        .then(msg => {
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            const flash = document.createElement('div');
+            flash.textContent = msg;
+            flash.style.background = "green";
+            flash.style.color = "white";
+            flash.style.padding = "10px";
+            flash.style.textAlign = "center";
+            flash.style.margin = "10px auto";
+            flash.style.width = "50%";
+            flash.style.borderRadius = "5px";
+            flash.style.fontWeight = "bold";
+
+            document.body.prepend(flash);
+
+            setTimeout(() => {
+                flash.remove();
+                location.reload();
+            }, 2000);
+        })
+        .catch(err => {
+            alert("Erreur lors de la mise à jour.");
+        });
+    });
+});
+</script>
+        </script>
+        
+</body>
+</html>
