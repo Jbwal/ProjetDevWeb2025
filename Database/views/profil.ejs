@@ -1,27 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profil</title>
+    <title>Profil de <%= user.login %></title>
+    <link rel="stylesheet" href="../style/daprofil.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-
-    <a href="/users/logout">Deconnexion</a>
-
-    <% if (success_msg) { %>
-        <div style="color: green;"><%= success_msg %></div>
+    <% if (success_msg && success_msg.length > 0) { %>
+        <div class="success-message">
+            <i class="fas fa-check-circle"></i> <%= success_msg %>
+        </div>
     <% } %>
 
-    <h1>Profil de <%=user.login%></h1>
-    <h3>Prenom : <%=user.firstName%></h3>
-    <h3>Nom : <%=user.lastName%></h3>
-    <h3>Age : <%=user.age%></h3>
-    <h3>Genre : <%=user.gender%></h3>
-    <h3>Date de naissance : <%=new Date(user.birthDate).toLocaleDateString('fr-FR')%></h3>
-    <h3>Dernière connexion : <%=new Date(user.last_login).toLocaleString('fr-FR')%></h3>
-
-    <a href="/users/modifProfil">Modifier le profil</a>
-    
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <h1><%= user.login %></h1>
+        </div>
+        
+        <div class="profile-body">
+            <div class="profile-info">
+                <div class="info-item">
+                    <div class="info-label">Prénom</div>
+                    <div class="info-value"><%= user.firstName %></div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Nom</div>
+                    <div class="info-value"><%= user.lastName %></div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Âge</div>
+                    <div class="info-value"><%= user.age %> ans</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Genre</div>
+                    <div class="info-value"><%= user.gender %></div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Date de naissance</div>
+                    <div class="info-value"><%= new Date(user.birthDate).toLocaleDateString('fr-FR') %></div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Dernière connexion</div>
+                    <div class="info-value"><%= new Date(user.last_login).toLocaleString('fr-FR') %></div>
+                </div>
+            </div>
+            
+            <div class="profile-actions">
+                <a href="/users/modifProfil" class="btn">
+                    <i class="fas fa-edit"></i> Modifier le profil
+                </a>
+                <a href="/users/logout" class="btn btn-outline">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </a>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

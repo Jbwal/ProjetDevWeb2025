@@ -1,16 +1,97 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Administration - Tableau de bord</title>
+    <link rel="stylesheet" href="../style/dadashAdmin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <!-- Header avec navigation -->
+    <header class="admin-header">
+        <nav class="navbar">
+            <div class="brand">
+                <a href="/admin/dashboard" class="brand-logo">Admin</a>
+            </div>
+            
+            <ul class="nav-links">
+                <li class="nav-item">
+                    <a href="/users/profil" class="nav-link">
+                        <i class="fas fa-user"></i> Profil
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="http://localhost:3000/fetchData" class="nav-link">
+                        <i class="fas fa-users"></i> Liste Utilisateurs
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/admin/objets" class="nav-link">
+                        <i class="fas fa-box"></i> Objets
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/users/logout" class="logout-button">
+                        <i class="fas fa-sign-out-alt"></i> Déconnexion
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </header>
 
-    <a href="/users/logout">Deconnexion</a>
-    <h1>Hello <%=user.login.charAt(0).toUpperCase() + user.login.slice(1) %></h1>
-    <h2>Vous êtes <%=user.userType %></h2>
-    <a href="/users/profil">Profil</a>
-    <a href="http://localhost:3000/fetchData">Liste Utilisateurs</a>
+    <!-- Contenu principal -->
+    <main class="admin-container">
+        <!-- Section de bienvenue -->
+        <section class="welcome-section">
+            <h1 class="welcome-title">Bonjour, <%= user.login.charAt(0).toUpperCase() + user.login.slice(1) %></h1>
+            <p class="welcome-subtitle">Bienvenue sur votre tableau de bord <%= user.userType %></p>
+        </section>
+
+        <!-- Statistiques -->
+        <section class="admin-stats">
+            <div class="stat-card">
+                <i class="fas fa-users stat-icon"></i>
+                <div class="stat-value">--</div>
+                <div class="stat-label">Utilisateurs Totaux</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-user-check stat-icon"></i>
+                <div class="stat-value">--</div>
+                <div class="stat-label">Utilisateurs Actifs</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-box stat-icon"></i>
+                <div class="stat-value">--</div>
+                <div class="stat-label">Objets</div>
+            </div>
+        </section>
+
+        <!-- Cartes d'actions rapides -->
+        <section class="admin-cards">
+            <div class="quick-action-card">
+                <h3 class="card-title"><i class="fas fa-user-cog"></i> Gestion du profil</h3>
+                <p class="card-content">Accédez à votre profil pour modifier vos informations personnelles.</p>
+                <a href="/users/profil" class="card-action">Voir mon profil</a>
+            </div>
+            
+            <div class="quick-action-card">
+                <h3 class="card-title"><i class="fas fa-users-cog"></i> Gestion des utilisateurs</h3>
+                <p class="card-content">Consultez, modifiez ou supprimez les comptes utilisateurs.</p>
+                <a href="http://localhost:3000/fetchData" class="card-action">Gérer les utilisateurs</a>
+            </div>
+            
+            <div class="quick-action-card">
+                <h3 class="card-title"><i class="fas fa-boxes"></i> Gestion des objets</h3>
+                <p class="card-content">Ajoutez, modifiez ou supprimez des objets du système.</p>
+                <a href="/admin/objets" class="card-action">Gérer les objets</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="admin-footer">
+        <p>&copy; <%= new Date().getFullYear() %> - Panel Administrateur</p>
+    </footer>
 </body>
 </html>

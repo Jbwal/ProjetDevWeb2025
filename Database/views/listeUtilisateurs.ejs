@@ -3,15 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Liste des utilisateurs</title>
-    <style>
-        table { border-collapse: collapse; width: 80%; margin: auto; }
-        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
-        th { background-color: #f0f0f0; }
-        h1 { text-align: center; margin-top: 30px; }
-    </style>
+    <link rel="stylesheet" href="../style/daLU.css"
 </head>
 <body>
     <h1>Liste des Utilisateurs</h1>
+    
 
     <div style="text-align: center; margin-bottom: 20px;">
         <a href="/fetchData?sort=id&order=asc">Trier par ID ↑</a> |
@@ -52,7 +48,6 @@
             <% }) %>
         </tbody>
     </table>
-
     <script>
         document.querySelectorAll('.delete-btn').forEach(button => {
             button.addEventListener('click', async () => {
@@ -135,7 +130,6 @@
     });
 });
 </script>
-        </script>
         
 </body>
 </html>
