@@ -22,14 +22,90 @@ body {
     padding: 2rem;
 }
 
-h1 {
+/* Header avec titre et bouton retour */
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.back-btn {
+    display: inline-block;
+    font-size: 0.95rem;
+    color: var(--dark);
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: var(--transition);
+    background-color: rgba(156, 136, 97, 0.1);
+    position: absolute;
+    left: 0;
+}
+
+.back-btn:hover {
+    background-color: var(--primary);
+    color: white;
+}
+
+/* Titre amélioré */
+.page-title {
     font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-size: 2rem;
-    margin: 30px 0;
+    font-weight: 500;
+    font-size: 2.5rem;
     color: var(--primary);
     text-align: center;
     letter-spacing: 2px;
+    margin: 0 auto;
+    padding: 10px 0;
+    position: relative;
+    width: fit-content;
+}
+
+.page-title:after {
+    content: '';
+    position: absolute;
+    width: 80%;
+    height: 3px;
+    background: var(--accent);
+    left: 10%;
+    bottom: 0;
+}
+
+/* Boutons de tri */
+.sort-buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 1.5rem auto;
+}
+
+.sort-btn {
+    background-color: white;
+    color: var(--dark);
+    border: 1px solid var(--primary);
+    border-radius: 30px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    font-family: 'Montserrat', sans-serif;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sort-btn:hover {
+    background-color: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.sort-btn i {
+    font-size: 0.9rem;
 }
 
 /* Tableau des utilisateurs */
@@ -40,7 +116,7 @@ table {
     margin: 2rem auto;
     background-color: white;
     box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    border-radius: 4px;
+    border-radius: 8px;
     overflow: hidden;
 }
 
@@ -68,32 +144,6 @@ tr:hover {
     background-color: rgba(156, 136, 97, 0.08);
 }
 
-/* Boutons de tri */
-.sort-links {
-    text-align: center;
-    margin: 1.5rem auto;
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-}
-
-.sort-links a {
-    color: var(--dark);
-    text-decoration: none;
-    padding: 8px 16px;
-    border: 1px solid var(--primary);
-    border-radius: 30px;
-    font-size: 0.8rem;
-    letter-spacing: 1px;
-    transition: var(--transition);
-}
-
-.sort-links a:hover {
-    background-color: var(--primary);
-    color: white;
-}
-
 /* Boutons et actions */
 .delete-btn {
     background-color: #e74c3c;
@@ -109,6 +159,7 @@ tr:hover {
 
 .delete-btn:hover {
     background-color: #c0392b;
+    transform: translateY(-2px);
 }
 
 .update-form {
@@ -141,6 +192,7 @@ tr:hover {
 
 .update-form button:hover {
     background-color: var(--accent);
+    transform: translateY(-2px);
 }
 
 /* Message flash */
@@ -177,7 +229,22 @@ tr:hover {
         margin-bottom: 5px;
     }
     
-    h1 {
-        font-size: 1.5rem;
+    .page-title {
+        font-size: 1.8rem;
+    }
+    
+    .sort-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .header-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .back-btn {
+        position: static;
+        margin-bottom: 10px;
     }
 }

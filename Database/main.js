@@ -212,26 +212,69 @@ app.get('/verify-email/:token', (req, res) => {
 
 
 app.get('/fetchData',(req,res)=>{
+    if(req.user.userType === 'admin'){
+        const sortField = req.query.sort || 'id'
+        const sortOrder = req.query.order || 'asc'
 
-    const sortField = req.query.sort || 'id'
-    const sortOrder = req.query.order || 'asc'
+        const allowedFields = ['id', 'pointsTotal']
+        const allowedOrders = ['asc', 'desc']
 
-    const allowedFields = ['id', 'pointsTotal']
-    const allowedOrders = ['asc', 'desc']
+        if (!allowedFields.includes(sortField) || !allowedOrders.includes(sortOrder)) { // pour éviter injections sql
+            return res.status(400).send('Paramètres de tri invalides.');
+        }
 
-    if (!allowedFields.includes(sortField) || !allowedOrders.includes(sortOrder)) { // pour éviter injections sql
-        return res.status(400).send('Paramètres de tri invalides.');
+        const fetch_query = `SELECT * FROM public."UserHotel" ORDER BY "${sortField}" ${sortOrder}`
+        con.query(fetch_query,(err,result)=>{
+            if(err)
+                {
+                    res.send(err)
+                }else{
+                    res.render('listeUtilisateursAdmin', { users: result.rows })
+                }
+        })
     }
+    else if(req.user.userType === 'complexe'){
+        const sortField = req.query.sort || 'id'
+        const sortOrder = req.query.order || 'asc'
 
-    const fetch_query = `SELECT * FROM public."UserHotel" ORDER BY "${sortField}" ${sortOrder}`
-    con.query(fetch_query,(err,result)=>{
-        if(err)
-            {
-                res.send(err)
-            }else{
-                res.render('listeUtilisateurs', { users: result.rows })
-            }
-    })
+        const allowedFields = ['id', 'pointsTotal']
+        const allowedOrders = ['asc', 'desc']
+
+        if (!allowedFields.includes(sortField) || !allowedOrders.includes(sortOrder)) { // pour éviter injections sql
+            return res.status(400).send('Paramètres de tri invalides.');
+        }
+
+        const fetch_query = `SELECT * FROM public."UserHotel" ORDER BY "${sortField}" ${sortOrder}`
+        con.query(fetch_query,(err,result)=>{
+            if(err)
+                {
+                    res.send(err)
+                }else{
+                    res.render('listeUtilisateursComplexe', { users: result.rows })
+                }
+        })
+    }
+    else{
+        const sortField = req.query.sort || 'id'
+        const sortOrder = req.query.order || 'asc'
+
+        const allowedFields = ['id', 'pointsTotal']
+        const allowedOrders = ['asc', 'desc']
+
+        if (!allowedFields.includes(sortField) || !allowedOrders.includes(sortOrder)) { // pour éviter injections sql
+            return res.status(400).send('Paramètres de tri invalides.');
+        }
+
+        const fetch_query = `SELECT * FROM public."UserHotel" ORDER BY "${sortField}" ${sortOrder}`
+        con.query(fetch_query,(err,result)=>{
+            if(err)
+                {
+                    res.send(err)
+                }else{
+                    res.render('listeUtilisateursSimple', { users: result.rows })
+                }
+        })
+    }
 })
 
 app.get('/fetchbyId/:id',(req,res)=>{
@@ -351,12 +394,47 @@ app.get('/users/login', (req,res)=>{
     res.render('login')
 })
 
-app.get('/users/dashboardSimple', (req,res)=>{
-    res.render('dashboardSimple', {user: req.user})
+app.get('/users/dashboardSimple', async (req,res)=>{
+    try {
+        const totalResult = await con.query('SELECT COUNT(*) FROM public."UserHotel"')
+        const activeResult = await con.query(`
+            SELECT COUNT(*) FROM public."UserHotel" 
+            WHERE last_login >= NOW() - INTERVAL '7 days'
+        `)
+        const totalObject = await con.query(`SELECT COUNT(*) FROM public."Device"
+            LEFT JOIN public."Thermostats" ON public."Device".id=public."Thermostats".id`)
+
+        const totalUsers = parseInt(totalResult.rows[0].count, 10)
+        const activeUsers = parseInt(activeResult.rows[0].count, 10)
+        const totalObjects = parseInt(totalObject.rows[0].count, 10)
+        
+        res.render('dashboardSimple', { totalUsers, activeUsers, totalObjects, user: req.user })
+    } catch (err) {
+        console.error(err)
+        res.render('dashboardSimple', { totalUsers: 'Erreur', activeUsers: 'Erreur' , totalObjects: 'Erreur' , user : req.user})
+    }
 })
 
-app.get('/users/dashboardComplexe', (req,res)=>{
-    res.render('dashboardComplexe', {user: req.user})
+
+app.get('/users/dashboardComplexe', async (req,res)=>{
+    try {
+        const totalResult = await con.query('SELECT COUNT(*) FROM public."UserHotel"')
+        const activeResult = await con.query(`
+            SELECT COUNT(*) FROM public."UserHotel" 
+            WHERE last_login >= NOW() - INTERVAL '7 days'
+        `)
+        const totalObject = await con.query(`SELECT COUNT(*) FROM public."Device"
+            LEFT JOIN public."Thermostats" ON public."Device".id=public."Thermostats".id`)
+
+        const totalUsers = parseInt(totalResult.rows[0].count, 10)
+        const activeUsers = parseInt(activeResult.rows[0].count, 10)
+        const totalObjects = parseInt(totalObject.rows[0].count, 10)
+        
+        res.render('dashboardComplexe', { totalUsers, activeUsers, totalObjects, user: req.user })
+    } catch (err) {
+        console.error(err)
+        res.render('dashboardComplexe', { totalUsers: 'Erreur', activeUsers: 'Erreur' , totalObjects: 'Erreur' , user : req.user})
+    }
 })
 
 app.get('/users/dashboardAdmin', async (req,res)=>{
@@ -366,14 +444,17 @@ app.get('/users/dashboardAdmin', async (req,res)=>{
             SELECT COUNT(*) FROM public."UserHotel" 
             WHERE last_login >= NOW() - INTERVAL '7 days'
         `)
+        const totalObject = await con.query(`SELECT COUNT(*) FROM public."Device"
+            LEFT JOIN public."Thermostats" ON public."Device".id=public."Thermostats".id`)
 
         const totalUsers = parseInt(totalResult.rows[0].count, 10)
         const activeUsers = parseInt(activeResult.rows[0].count, 10)
-
-        res.render('dashboardAdmin', { totalUsers, activeUsers, user: req.user })
+        const totalObjects = parseInt(totalObject.rows[0].count, 10)
+        
+        res.render('dashboardAdmin', { totalUsers, activeUsers, totalObjects, user: req.user })
     } catch (err) {
         console.error(err)
-        res.render('dashboardAdmin', { totalUsers: 'Erreur', activeUsers: 'Erreur' , user : req.user})
+        res.render('dashboardAdmin', { totalUsers: 'Erreur', activeUsers: 'Erreur' , totalObjects: 'Erreur' , user : req.user})
     }
 })
 

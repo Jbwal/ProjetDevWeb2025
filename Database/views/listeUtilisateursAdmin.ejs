@@ -3,20 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <title>Liste des utilisateurs</title>
-    <link rel="stylesheet" href="../style/daLU.css"
+    <link rel="stylesheet" href="../style/daLU.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 </head>
 <body>
-    <h1>Liste des Utilisateurs</h1>
+    <div class="header-container">
+        <a href="/users/dashboardAdmin" class="back-btn"><i class="fas fa-arrow-left"></i> Retour</a>
+        <h1 class="page-title">Liste des Utilisateurs</h1>
+    </div>
     
-
-    <div style="text-align: center; margin-bottom: 20px;">
-        <a href="/fetchData?sort=id&order=asc">Trier par ID ↑</a> |
-        <a href="/fetchData?sort=id&order=desc">Trier par ID ↓</a> |
-        <a href="/fetchData?sort=pointsTotal&order=asc">Trier par points ↑</a> |
-        <a href="/fetchData?sort=pointsTotal&order=desc">Trier par points ↓</a>
+    <div class="sort-buttons">
+        <button class="sort-btn" onclick="window.location.href='/fetchData?sort=id&order=asc'">
+            <i class="fas fa-sort-numeric-down"></i> ID ↑
+        </button>
+        <button class="sort-btn" onclick="window.location.href='/fetchData?sort=id&order=desc'">
+            <i class="fas fa-sort-numeric-up"></i> ID ↓
+        </button>
+        <button class="sort-btn" onclick="window.location.href='/fetchData?sort=pointsTotal&order=asc'">
+            <i class="fas fa-sort-amount-down"></i> Points ↑
+        </button>
+        <button class="sort-btn" onclick="window.location.href='/fetchData?sort=pointsTotal&order=desc'">
+            <i class="fas fa-sort-amount-up"></i> Points ↓
+        </button>
     </div>
 
-    <table>
+    <table id="">
         <thead>
             <tr>
                 <th>ID</th>
@@ -73,6 +84,7 @@
                         flash.style.textAlign = "center"
                         flash.style.margin = "10px auto"
                         flash.style.width = "50%"
+                        flash.style.borderRadius = "5px"
         
                         document.body.prepend(flash)
         
@@ -129,7 +141,6 @@
         });
     });
 });
-</script>
-        
+    </script>
 </body>
 </html>

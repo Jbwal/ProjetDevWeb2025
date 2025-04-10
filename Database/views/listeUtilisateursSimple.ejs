@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des utilisateurs</title>
+    <link rel="stylesheet" href="../style/daLU.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+</head>
+<body>
+    <div class="header-container">
+        <a href="/users/dashboardSimple" class="back-btn"><i class="fas fa-arrow-left"></i> Retour</a>
+        <h1 class="page-title">Liste des Utilisateurs</h1>
+    </div>
+    
+    <div class="sort-buttons">
+        <button class="sort-btn" onclick="window.location.href='/fetchData?sort=id&order=asc'">
+            <i class="fas fa-sort-numeric-down"></i> ID ↑
+        </button>
+        <button class="sort-btn" onclick="window.location.href='/fetchData?sort=id&order=desc'">
+            <i class="fas fa-sort-numeric-up"></i> ID ↓
+        </button>
+        <button class="sort-btn" onclick="window.location.href='/fetchData?sort=pointsTotal&order=asc'">
+            <i class="fas fa-sort-amount-down"></i> Points ↑
+        </button>
+        <button class="sort-btn" onclick="window.location.href='/fetchData?sort=pointsTotal&order=desc'">
+            <i class="fas fa-sort-amount-up"></i> Points ↓
+        </button>
+    </div>
+
+    <table id="">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Login</th>
+                <th>Email</th>
+                <th>Type</th>
+                <th>Points</th>
+                <th>Dernière connexion</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% users.forEach(user => { %>
+                <tr>
+                    <td><%= user.id %></td>
+                    <td><%= user.login %></td>
+                    <td><%= user.email %></td>
+                    <td><%= user.userType %></td>
+                    <td><%= user.pointsTotal %></td>
+                    <td><%=new Date(user.last_login).toLocaleString('fr-FR')%></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</body>
+</html>

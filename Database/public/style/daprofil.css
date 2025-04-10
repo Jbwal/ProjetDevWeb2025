@@ -161,18 +161,24 @@ body {
     text-align: center;
 }
 
-.btnreturn {
-    position: absolute;
-    top: 0;
-    left: 0;
-    margin-top: 15px;
-    margin-left: 15px;
+.back-btn {
     display: inline-block;
-    background-color: white;
-    color: white;
-    border: none;
-    border-radius: 30px;
+    font-size: 0.95rem;
+    color: var(--dark);
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: var(--transition);
+    background-color: rgba(156, 136, 97, 0.1);
+    position: absolute;
+    left: 1;
 }
+
+.back-btn:hover {
+    background-color: var(--primary);
+    color: white;
+}
+
 .btn:hover {
     background-color: var(--accent);
     transform: translateY(-3px);
@@ -225,6 +231,16 @@ body {
     
     body {
         padding: 1.5rem;
+    }
+        
+    .back-btn {
+        position: static;
+        margin-bottom: 10px;
+    }
+    
+    .header-container {
+        flex-direction: column;
+        gap: 15px;
     }
 }
 

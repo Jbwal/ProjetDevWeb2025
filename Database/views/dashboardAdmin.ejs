@@ -12,28 +12,38 @@
     <header class="admin-header">
         <nav class="navbar">
             <div class="brand">
-                <a href="/admin/dashboard" class="brand-logo">Admin</a>
+                <a href="/" class="brand-logo">Templar Hotel</a>
             </div>
             
             <ul class="nav-links">
                 <li class="nav-item">
-                    <a href="/users/profil" class="nav-link">
-                        <i class="fas fa-user"></i> Profil
+                    <a href="/" class="nav-link" data-page="accueil">
+                        <i class="fas fa-home"></i> Accueil
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="http://localhost:3000/fetchData" class="nav-link">
-                        <i class="fas fa-users"></i> Liste Utilisateurs
+                    <a href="/users/actualites" class="nav-link" data-page="actualite">
+                        <i class="fas fa-newspaper"></i> Actualité
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/admin/objets" class="nav-link">
+                    <a href="/users/login" class="nav-link" data-page="forum">
+                        <i class="fas fa-comments"></i> Forum
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/users/objet" class="nav-link" data-page="objets">
                         <i class="fas fa-box"></i> Objets
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="/users/dashboardAdmin" class="nav-link active" data-page="profil">
+                        <i class="fas fa-user"></i> Profil
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="/users/logout" class="logout-button">
-                        <i class="fas fa-sign-out-alt"></i> Déconnexion
+                        <i class="fas fa-sign-in-alt"></i> Déconnexion
                     </a>
                 </li>
             </ul>
@@ -62,7 +72,7 @@
             </div>
             <div class="stat-card">
                 <i class="fas fa-box stat-icon"></i>
-                <div class="stat-value">--</div>
+                <div class="stat-value"><%=totalObjects%></div>
                 <div class="stat-label">Objets</div>
             </div>
         </section>
