@@ -517,3 +517,294 @@ input:focus {
 .login-button i {
     margin-right: 8px;
 }
+/* Correction de la structure principale */
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.admin-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+}
+
+.navbar {
+    height: 70px;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Amélioration de la navigation */
+.nav-links {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.nav-item {
+    position: relative;
+}
+
+.nav-link {
+    height: 70px;
+    display: flex;
+    align-items: center;
+    padding: 0 1.2rem;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.nav-link:hover {
+    color: var(--primary);
+    transform: translateY(-2px);
+    border-bottom: 3px solid var(--primary);
+}
+
+.nav-link.active {
+    color: var(--primary);
+    font-weight: 500;
+    border-bottom: 3px solid var(--primary);
+}
+
+.nav-link i {
+    margin-right: 8px;
+    transition: transform 0.3s ease;
+}
+
+.nav-link:hover i {
+    transform: scale(1.2);
+}
+
+/* Améliorations pour la barre de recherche */
+.search-container {
+    display: flex;
+    gap: 10px;
+    margin: 1.5rem 0;
+}
+
+#search-input {
+    flex-grow: 1;
+    padding: 0.8rem 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+#search-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 2px 10px rgba(156, 136, 97, 0.2);
+    transform: translateY(-1px);
+}
+
+.btn-search {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-search:hover {
+    background-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Animation pour le logo */
+.brand-logo {
+    position: relative;
+    padding: 0.5rem 0;
+    transition: all 0.3s ease;
+}
+
+.brand-logo:hover {
+    letter-spacing: 1.5px;
+    transform: scale(1.05);
+}
+
+.brand-logo::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--primary);
+    transition: width 0.3s ease;
+}
+
+.brand-logo:hover::after {
+    width: 100%;
+}
+
+/* Effet pour le bouton de connexion */
+.login-button {
+    padding: 0.6rem 1.2rem;
+    border-radius: 4px;
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+}
+
+.login-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background-color: var(--primary);
+    transition: all 0.3s ease;
+    z-index: -1;
+}
+
+.login-button:hover {
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(156, 136, 97, 0.3);
+}
+
+.login-button:hover::before {
+    left: 0;
+}
+
+/* Améliorations pour les cartes */
+.dashboard-card {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+    transform: translateY(0);
+}
+
+.dashboard-card:hover {
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    transform: translateY(-5px);
+}
+
+.dashboard-title {
+    position: relative;
+    padding-bottom: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.dashboard-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 50px;
+    height: 3px;
+    background-color: var(--primary);
+    transition: width 0.3s ease;
+}
+
+.dashboard-card:hover .dashboard-title::after {
+    width: 100px;
+}
+
+/* Style pour la liste des objets */
+.objects-container {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.object-item {
+    background-color: white;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+.object-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+.object-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.object-details {
+    padding: 1rem;
+}
+
+.object-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--dark);
+}
+
+.object-description {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.login-required-message {
+    padding: 1rem;
+    background-color: #f8f5f1;
+    border-left: 4px solid var(--primary);
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    border-radius: 0 4px 4px 0;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive design improved */
+@media (max-width: 768px) {
+    .navbar {
+        height: auto;
+        padding: 1rem;
+        flex-direction: column;
+    }
+    
+    .brand {
+        margin-bottom: 1rem;
+    }
+    
+    .nav-links {
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.3rem;
+    }
+    
+    .nav-link {
+        height: 50px;
+        padding: 0 0.8rem;
+    }
+    
+    .search-container {
+        flex-direction: column;
+    }
+    
+    .objects-container {
+        grid-template-columns: 1fr;
+    }
+}

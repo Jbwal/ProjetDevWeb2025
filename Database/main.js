@@ -359,9 +359,24 @@ app.get('/users/dashboardComplexe', (req,res)=>{
     res.render('dashboardComplexe', {user: req.user})
 })
 
-app.get('/users/dashboardAdmin', (req,res)=>{
-    res.render('dashboardAdmin', {user: req.user})
+app.get('/users/dashboardAdmin', async (req,res)=>{
+    try {
+        const totalResult = await con.query('SELECT COUNT(*) FROM public."UserHotel"')
+        const activeResult = await con.query(`
+            SELECT COUNT(*) FROM public."UserHotel" 
+            WHERE last_login >= NOW() - INTERVAL '7 days'
+        `)
+
+        const totalUsers = parseInt(totalResult.rows[0].count, 10)
+        const activeUsers = parseInt(activeResult.rows[0].count, 10)
+
+        res.render('dashboardAdmin', { totalUsers, activeUsers, user: req.user })
+    } catch (err) {
+        console.error(err)
+        res.render('dashboardAdmin', { totalUsers: 'Erreur', activeUsers: 'Erreur' , user : req.user})
+    }
 })
+
 
 app.get('/users/profil', (req,res)=>{
     res.render('profil.ejs', {user: req.user})
@@ -369,6 +384,14 @@ app.get('/users/profil', (req,res)=>{
 
 app.get('/users/modifProfil', (req,res)=>{
     res.render('modifProfil.ejs', {user: req.user})
+})
+
+app.get('/users/objet', (req,res)=>{
+    res.render('objet.ejs', {user: req.user})
+})
+
+app.get('/users/actualites', (req,res)=>{
+    res.render('actualites.ejs', {user: req.user})
 })
 
 app.get("/users/logout", (req,res) => {

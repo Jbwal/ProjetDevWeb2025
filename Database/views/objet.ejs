@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Templar Hotel - Luxe & Élégance</title>
+    <link rel="stylesheet" href="../style/daobjet.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Page Dashboard -->
+    <div class="dashboard">
+        <header class="admin-header">
+            <nav class="navbar">
+                <div class="brand">
+                    <a href="/" class="brand-logo">Templar Hotel</a>
+                </div>
+                
+                <ul class="nav-links">
+                    <li class="nav-item">
+                        <a href="/" class="nav-link" data-page="accueil">
+                            <i class="fas fa-home"></i> Accueil
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/users/actualites" class="nav-link" data-page="actualite">
+                            <i class="fas fa-newspaper"></i> Actualité
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/forum" class="nav-link" data-page="forum">
+                            <i class="fas fa-comments"></i> Forum
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/users/objet" class="nav-link active" data-page="objets">
+                            <i class="fas fa-box"></i> Objets
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/profil" class="nav-link" data-page="profil">
+                            <i class="fas fa-user"></i> Profil
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/users/login" class="login-button">
+                            <i class="fas fa-sign-in-alt"></i> Connexion
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+        
+        <div class="dashboard-content">
+            <div class="dashboard-card">
+                <h2 class="dashboard-title">Objets Disponibles</h2>
+                <p class="login-required-message">Connectez-vous pour voir tous les détails des objets disponibles.</p>
+                
+                <!-- Barre de recherche -->
+                <div class="search-container">
+                    <input type="text" id="search-input" placeholder="Rechercher un objet...">
+                    <button class="btn btn-search" id="search-button">Rechercher</button>
+                </div>
+                
+                <!-- Liste des objets -->
+                <div class="objects-container" id="objects-list">
+                    <!-- Les objets seront ajoutés ici dynamiquement -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/scriptindex.js"></script>
+    <script src="scriptobjet.js"></script>
+</body>
+</html>
