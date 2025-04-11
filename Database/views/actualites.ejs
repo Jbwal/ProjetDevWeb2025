@@ -26,24 +26,42 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/users/login" class="nav-link" data-page="forum">
-                        <i class="fas fa-comments"></i> Forum
-                    </a>
+                    <% if (user) { %>
+                        <a href="/users/forum" class="nav-link" data-page="forum">
+                            <i class="fas fa-comments"></i> Forum
+                        </a>
+                    <% } else { %>
+                        <a href="/users/login" class="nav-link" data-page="forum">
+                            <i class="fas fa-comments"></i> Forum
+                        </a>
+                    <% }%>
                 </li>
                 <li class="nav-item">
-                    <a href="/users/objet" class="nav-link" data-page="objets">
+                    <a href="/users/listeObjets" class="nav-link" data-page="objets">
                         <i class="fas fa-box"></i> Objets
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/users/login" class="nav-link" data-page="profil">
-                        <i class="fas fa-user"></i> Profil
-                    </a>
+                    <% if (user) { %>
+                        <a href="/users/dashboard<%= user.userType.charAt(0).toUpperCase() + user.userType.slice(1) %>" class="nav-link" data-page="profil">
+                            <i class="fas fa-user"></i> Profil
+                        </a>
+                    <% } else { %>
+                        <a href="/users/login" class="nav-link" data-page="profil">
+                            <i class="fas fa-user"></i> Profil
+                        </a>
+                    <% }%>
                 </li>
                 <li class="nav-item">
-                    <a href="/users/login" class="login-button">
-                        <i class="fas fa-sign-in-alt"></i> Connexion
-                    </a>
+                    <% if (user) { %>
+                        <a href="/users/logout" class="login-button">
+                            <i class="fas fa-sign-in-alt"></i> Déconnexion
+                        </a>
+                    <% } else { %>
+                        <a href="/users/login" class="login-button">
+                            <i class="fas fa-sign-in-alt"></i> Connexion
+                        </a>
+                    <% }%>
                 </li>
             </ul>
         </nav>

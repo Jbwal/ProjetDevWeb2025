@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Templar Hotel - Luxe & Élégance</title>
+    <link rel="stylesheet" href="../style/daobjet.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Page Dashboard -->
+    <div class="dashboard">
+        <header class="admin-header">
+            <nav class="navbar">
+                <div class="brand">
+                    <a href="/" class="brand-logo">Templar Hotel</a>
+                </div>
+                
+                <ul class="nav-links">
+                    <li class="nav-item">
+                        <a href="/" class="nav-link" data-page="accueil">
+                            <i class="fas fa-home"></i> Accueil
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/users/actualites" class="nav-link" data-page="actualite">
+                            <i class="fas fa-newspaper"></i> Actualité
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/forum" class="nav-link" data-page="forum">
+                            <i class="fas fa-comments"></i> Forum
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/users/listeObjets" class="nav-link active" data-page="objets">
+                            <i class="fas fa-box"></i> Objets
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <% if (user) { %>
+                            <a href="/users/dashboard<%= user.userType.charAt(0).toUpperCase() + user.userType.slice(1) %>" class="nav-link" data-page="profil">
+                                <i class="fas fa-user"></i> Profil
+                            </a>
+                        <% } else { %>
+                            <a href="/users/login" class="nav-link" data-page="profil">
+                                <i class="fas fa-user"></i> Profil
+                            </a>
+                        <% }%>
+                    </li>
+                    <li class="nav-item">
+                            <% if (user) { %>
+                                <a href="/users/logout" class="login-button">
+                                    <i class="fas fa-sign-in-alt"></i> Déconnexion
+                                </a>
+                            <% } else { %>
+                                <a href="/users/login" class="login-button">
+                                    <i class="fas fa-sign-in-alt"></i> Connexion
+                                </a>
+                            <% }%>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+        
+        <div class="dashboard-content">
+            <div class="dashboard-card">
+                <h2 class="dashboard-title">Thermomètres Disponibles</h2>
+                <% if (user) { %>
+                    <a href="/users/listeObjets" class="login-button">
+                        <i class="fa-solid fa-box"></i> Objets
+                    </a>
+                    <!-- Barre de recherche -->
+                    <div class="search-container">
+                        <input type="text" id="search-input" placeholder="Rechercher un thermomètre...">
+                        <button class="btn btn-search" id="search-button">Rechercher</button>
+                    </div>
+                    
+                    <!-- Liste des objets -->
+                    <div class="objects-container" id="objects-list">
+                        <!-- Les objets seront ajoutés ici dynamiquement -->
+                        <table id="">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nom</th>
+                                    <th>Marque</th>
+                                    <th>Status</th>
+                                    <th>Type de connexion</th>
+                                    <th>Niveau de Batterie</th>
+                                    <th>Température Actuelle</th>
+                                    <th>Température Cible</th>
+                                    <th>Dernière Interaction</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% devices.forEach(device => { %>
+                                    <tr>
+                                        <td><%= device.id %></td>
+                                        <td><%= device.name %></td>
+                                        <td><%= device.brand %></td>
+                                        <td><%= device.status %></td>
+                                        <td><%= device.connectionType %></td>
+                                        <td><%= device.batteryLevel %></td>
+                                        <td><%= device.currentTemp %></td>
+                                        <td><%= device.goalTemp %></td>
+                                        <td><%= new Date(device.lastInteraction).toLocaleString('fr-FR') %></td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% } else {%>
+                    <p class="login-required-message">Connectez-vous pour voir tous les détails des objets disponibles.</p>
+                <% } %>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    // Récupérer les éléments du DOM
+    const searchButton = document.getElementById('search-button');
+    const searchInput = document.getElementById('search-input');
+
+    // Ajouter un écouteur d'événement au bouton de recherche
+    searchButton.addEventListener('click', function() {
+        performSearch();
+    });
+
+    // Ajouter un écouteur d'événement pour la touche Entrée dans l'input
+    searchInput.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            performSearch();
+        }
+    });
+
+    // Fonction pour effectuer la recherche
+    function performSearch() {
+        // Récupérer la valeur de l'input
+        const searchTerm = searchInput.value.trim();
+        
+        // Construire l'URL avec le paramètre de recherche
+        let url = '/users/listeTermos';
+        
+        // Ajouter le paramètre de recherche si un terme est fourni
+        if (searchTerm) {
+            url += `?search=${encodeURIComponent(searchTerm)}`;
+        }
+        
+        // Rediriger vers l'URL construite
+        window.location.href = url;
+    }
+
+    // Si un terme de recherche existe déjà dans l'URL, le mettre dans l'input
+    function populateSearchInput() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchParam = urlParams.get('search');
+        
+        if (searchParam) {
+            searchInput.value = searchParam;
+        }
+    }
+
+    // Initialiser l'input avec le terme de recherche actuel
+    populateSearchInput();
+});
+    </script>
+    <script src="../js/scriptindex.js"></script>
+    <script src="scriptobjet.js"></script>
+</body>
+</html>

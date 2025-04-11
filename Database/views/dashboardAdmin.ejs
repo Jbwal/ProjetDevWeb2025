@@ -27,12 +27,18 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/users/login" class="nav-link" data-page="forum">
-                        <i class="fas fa-comments"></i> Forum
-                    </a>
+                    <% if (user) { %>
+                        <a href="/users/forum" class="nav-link" data-page="forum">
+                            <i class="fas fa-comments"></i> Forum
+                        </a>
+                    <% } else { %>
+                        <a href="/users/login" class="nav-link" data-page="forum">
+                            <i class="fas fa-comments"></i> Forum
+                        </a>
+                    <% }%>
                 </li>
                 <li class="nav-item">
-                    <a href="/users/objet" class="nav-link" data-page="objets">
+                    <a href="/users/listeObjets" class="nav-link" data-page="objets">
                         <i class="fas fa-box"></i> Objets
                     </a>
                 </li>
@@ -94,7 +100,7 @@
             <div class="quick-action-card">
                 <h3 class="card-title"><i class="fas fa-boxes"></i> Gestion des objets</h3>
                 <p class="card-content">Ajoutez, modifiez ou supprimez des objets du système.</p>
-                <a href="/admin/objets" class="card-action">Gérer les objets</a>
+                <a href="/users/listeObjets" class="card-action">Gérer les objets</a>
             </div>
         </section>
     </main>

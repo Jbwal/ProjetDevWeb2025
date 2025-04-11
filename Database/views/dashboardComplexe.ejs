@@ -32,7 +32,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/users/objet" class="nav-link" data-page="objets">
+                    <a href="/users/listeObjets" class="nav-link" data-page="objets">
                         <i class="fas fa-box"></i> Objets
                     </a>
                 </li>
@@ -56,25 +56,6 @@
         <section class="welcome-section">
             <h1 class="welcome-title">Bonjour, <%= user.login.charAt(0).toUpperCase() + user.login.slice(1) %></h1>
             <p class="welcome-subtitle">Bienvenue sur votre tableau de bord <%= user.userType %></p>
-        </section>
-
-        <!-- Statistiques -->
-        <section class="admin-stats">
-            <div class="stat-card">
-                <i class="fas fa-users stat-icon"></i>
-                <div class="stat-value"><%= totalUsers%></div>
-                <div class="stat-label">Utilisateurs Totaux</div>
-            </div>
-            <div class="stat-card">
-                <i class="fas fa-user-check stat-icon"></i>
-                <div class="stat-value"><%=activeUsers%></div>
-                <div class="stat-label">Utilisateurs Actifs</div>
-            </div>
-            <div class="stat-card">
-                <i class="fas fa-box stat-icon"></i>
-                <div class="stat-value"><%=totalObjects%></div>
-                <div class="stat-label">Objets</div>
-            </div>
         </section>
 
         <!-- Cartes d'actions rapides -->

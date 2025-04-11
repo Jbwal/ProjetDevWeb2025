@@ -209,8 +209,6 @@ app.get('/verify-email/:token', (req, res) => {
     });
 });
 
-
-
 app.get('/fetchData',(req,res)=>{
     if(req.user.userType == 'admin'){
         const sortField = req.query.sort || 'id'
@@ -254,6 +252,64 @@ app.get('/fetchData',(req,res)=>{
                 }
         })
     }
+})
+
+app.get('/users/listeObjets', (req, res) => {
+    // Vérification du type d'utilisateur
+    // Récupération du terme de recherche
+    const recherche = req.query.search || '';
+
+    // Requête SQL pour les administrateurs (peut avoir des informations supplémentaires)
+    let fetch_query = `SELECT * FROM public."Device"`
+    const params =[]
+
+    // Ajout de la condition de recherche si un terme est fourni
+    if (recherche) {
+        fetch_query += ` WHERE name LIKE $1 OR "deviceType" LIKE $1 OR brand LIKE $1 OR status LIKE $1`
+        params.push(`%${recherche}%`)
+    }
+
+    con.query(fetch_query, params, (err, result) => {
+        if (err) {
+            res.send(err)
+        } else {
+            // Rendu de la page avec les données des appareils et l'utilisateur courant
+            res.render('listeObjets', { 
+                devices: result.rows,
+                user: req.user,
+                recherche: recherche //renvoie le terme de recherche
+            })
+        }
+    })
+})
+
+app.get('/users/listeTermos', (req, res) => {
+    // Vérification du type d'utilisateur
+    // Récupération du terme de recherche
+    const recherche = req.query.search || '';
+
+    // Requête SQL pour les administrateurs (peut avoir des informations supplémentaires)
+    let fetch_query = `SELECT * FROM public."Thermostats"`
+    const params =[]
+
+    // Ajout de la condition de recherche si un terme est fourni
+    if (recherche) {
+        fetch_query += ` WHERE name LIKE $1 OR brand LIKE $1 OR status LIKE $1`
+        params.push(`%${recherche}%`)
+    }
+
+    con.query(fetch_query, params, (err, result) => {
+        if (err) {
+            res.send(err)
+        } else {
+            // Rendu de la page avec les données des appareils et l'utilisateur courant
+            res.render('listeTermos', { 
+                devices: result.rows,
+                user: req.user,
+                recherche: recherche //renvoie le terme de recherche
+            })
+        }
+    })
 })
 
 app.get('/fetchbyId/:id',(req,res)=>{
@@ -357,9 +413,8 @@ app.listen(3000,()=>{
     console.log("Server is running...")
 })
 
-
 app.get('/', (req,res) => {
-    res.render('index')
+    res.render('index', { user: req.user} )
 })
 
 app.get('/users/register', (req,res)=>{
@@ -380,12 +435,14 @@ app.get('/users/dashboardSimple', async (req,res)=>{
             SELECT COUNT(*) FROM public."UserHotel" 
             WHERE last_login >= NOW() - INTERVAL '7 days'
         `)
-        const totalObject = await con.query(`SELECT COUNT(*) FROM public."Device"
-            LEFT JOIN public."Thermostats" ON public."Device".id=public."Thermostats".id`)
+        const totalObject1 = await con.query(`SELECT COUNT(*) FROM public."Device"`)
+        const totalObject2 = await con.query(`SELECT COUNT(*) FROM public."Thermostats"`)
 
         const totalUsers = parseInt(totalResult.rows[0].count, 10)
         const activeUsers = parseInt(activeResult.rows[0].count, 10)
-        const totalObjects = parseInt(totalObject.rows[0].count, 10)
+        const totalDevices = parseInt(totalObject1.rows[0].count, 10)
+        const totalThermos = parseInt(totalObject2.rows[0].count, 10)
+        const totalObjects = totalDevices + totalThermos
         
         res.render('dashboardSimple', { totalUsers, activeUsers, totalObjects, user: req.user })
     } catch (err) {
@@ -402,12 +459,14 @@ app.get('/users/dashboardComplexe', async (req,res)=>{
             SELECT COUNT(*) FROM public."UserHotel" 
             WHERE last_login >= NOW() - INTERVAL '7 days'
         `)
-        const totalObject = await con.query(`SELECT COUNT(*) FROM public."Device"
-            LEFT JOIN public."Thermostats" ON public."Device".id=public."Thermostats".id`)
+        const totalObject1 = await con.query(`SELECT COUNT(*) FROM public."Device"`)
+        const totalObject2 = await con.query(`SELECT COUNT(*) FROM public."Thermostats"`)
 
         const totalUsers = parseInt(totalResult.rows[0].count, 10)
         const activeUsers = parseInt(activeResult.rows[0].count, 10)
-        const totalObjects = parseInt(totalObject.rows[0].count, 10)
+        const totalDevices = parseInt(totalObject1.rows[0].count, 10)
+        const totalThermos = parseInt(totalObject2.rows[0].count, 10)
+        const totalObjects = totalDevices + totalThermos
         
         res.render('dashboardComplexe', { totalUsers, activeUsers, totalObjects, user: req.user })
     } catch (err) {
@@ -423,13 +482,15 @@ app.get('/users/dashboardAdmin', async (req,res)=>{
             SELECT COUNT(*) FROM public."UserHotel" 
             WHERE last_login >= NOW() - INTERVAL '7 days'
         `)
-        const totalObject = await con.query(`SELECT COUNT(*) FROM public."Device"
-            LEFT JOIN public."Thermostats" ON public."Device".id=public."Thermostats".id`)
+        const totalObject1 = await con.query(`SELECT COUNT(*) FROM public."Device"`)
+        const totalObject2 = await con.query(`SELECT COUNT(*) FROM public."Thermostats"`)
 
         const totalUsers = parseInt(totalResult.rows[0].count, 10)
         const activeUsers = parseInt(activeResult.rows[0].count, 10)
-        const totalObjects = parseInt(totalObject.rows[0].count, 10)
-        
+        const totalDevices = parseInt(totalObject1.rows[0].count, 10)
+        const totalThermos = parseInt(totalObject2.rows[0].count, 10)
+        const totalObjects = totalDevices + totalThermos
+
         res.render('dashboardAdmin', { totalUsers, activeUsers, totalObjects, user: req.user })
     } catch (err) {
         console.error(err)
@@ -444,10 +505,6 @@ app.get('/users/profil', (req,res)=>{
 
 app.get('/users/modifProfil', (req,res)=>{
     res.render('modifProfil.ejs', {user: req.user})
-})
-
-app.get('/users/objet', (req,res)=>{
-    res.render('objet.ejs', {user: req.user})
 })
 
 app.get('/users/actualites', (req,res)=>{

@@ -333,6 +333,7 @@ input:focus {
     font-family: 'Cormorant Garamond', serif;
     font-size: 1.6rem;
     margin-bottom: 1rem;
+    align-items: center;
 }
 
 .welcome-text, .dashboard-text {
@@ -483,7 +484,8 @@ input:focus {
 .nav-link.active {
     color: var(--primary);
     font-weight: 500;
-    border-bottom: 3px solid var(--primary);
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 3px;
 }
 
 .nav-link i {
@@ -565,12 +567,6 @@ input:focus {
 .nav-link:hover {
     color: var(--primary);
     transform: translateY(-2px);
-    border-bottom: 3px solid var(--primary);
-}
-
-.nav-link.active {
-    color: var(--primary);
-    font-weight: 500;
     border-bottom: 3px solid var(--primary);
 }
 
@@ -689,6 +685,7 @@ input:focus {
     margin-bottom: 2rem;
     transition: all 0.3s ease;
     transform: translateY(0);
+    align-items: center;
 }
 
 .dashboard-card:hover {
@@ -775,9 +772,54 @@ input:focus {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
+/* Tableau des utilisateurs */
+table {
+    border-collapse: collapse;
+    position: center;
+    width: 90%;
+    max-width: 1200px;
+    margin: 2rem auto;
+    background-color: white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th, td {
+    border: none;
+    padding: 14px 20px;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+th {
+    background-color: var(--primary);
+    color: white;
+    font-weight: 400;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+}
+
+tr:nth-child(even) {
+    background-color: rgba(0,0,0,0.02);
+}
+
+tr:hover {
+    background-color: rgba(156, 136, 97, 0.08);
+}
 
 /* Responsive design improved */
 @media (max-width: 768px) {
+    table {
+        width: 100%;
+    }
+    
+    th, td {
+        padding: 10px;
+        font-size: 0.8rem;
+    }
+
     .navbar {
         height: auto;
         padding: 1rem;
