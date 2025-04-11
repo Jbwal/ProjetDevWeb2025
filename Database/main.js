@@ -212,7 +212,7 @@ app.get('/verify-email/:token', (req, res) => {
 
 
 app.get('/fetchData',(req,res)=>{
-    if(req.user.userType === 'admin'){
+    if(req.user.userType == 'admin'){
         const sortField = req.query.sort || 'id'
         const sortOrder = req.query.order || 'asc'
 
@@ -230,27 +230,6 @@ app.get('/fetchData',(req,res)=>{
                     res.send(err)
                 }else{
                     res.render('listeUtilisateursAdmin', { users: result.rows })
-                }
-        })
-    }
-    else if(req.user.userType === 'complexe'){
-        const sortField = req.query.sort || 'id'
-        const sortOrder = req.query.order || 'asc'
-
-        const allowedFields = ['id', 'pointsTotal']
-        const allowedOrders = ['asc', 'desc']
-
-        if (!allowedFields.includes(sortField) || !allowedOrders.includes(sortOrder)) { // pour éviter injections sql
-            return res.status(400).send('Paramètres de tri invalides.');
-        }
-
-        const fetch_query = `SELECT * FROM public."UserHotel" ORDER BY "${sortField}" ${sortOrder}`
-        con.query(fetch_query,(err,result)=>{
-            if(err)
-                {
-                    res.send(err)
-                }else{
-                    res.render('listeUtilisateursComplexe', { users: result.rows })
                 }
         })
     }
