@@ -325,9 +325,34 @@ app.get('/fetchbyId/:id',(req,res)=>{
     })
 })
 
+function parseDateFR(dateStr) {
+    const [jour, mois, annee] = dateStr.split('/');
+    return new Date(`${annee}-${mois}-${jour}`); // Format ISO : YYYY-MM-DD
+}
+
 app.post('/update/:id', async (req, res) => {
     const id = req.params.id
-    const { firstName, lastName, age, gender, birthDate, password } = req.body
+    const { firstName, lastName, gender, birthDate, password } = req.body
+    
+    const aujourdHui = new Date()
+    const naissance = parseDateFR(birthDate)
+    
+    if (naissance > aujourdHui) return 0;
+
+    let age = aujourdHui.getFullYear() - naissance.getFullYear();
+
+    const moisActuel = aujourdHui.getMonth();
+    const jourActuel = aujourdHui.getDate();
+    const moisNaissance = naissance.getMonth();
+    const jourNaissance = naissance.getDate();
+
+    if (
+        moisActuel < moisNaissance || 
+        (moisActuel === moisNaissance && jourActuel < jourNaissance)
+    ) {
+        age--;
+    }
+
 
     try {
         let update_query = `
@@ -399,6 +424,19 @@ app.post('/updatePoints/:id', (req, res) => {
 app.delete('/delete/:id',(req,res)=>{
     const id = req.params.id
     const delete_query = 'DELETE FROM public."UserHotel" WHERE id = $1'
+    con.query(delete_query,[id],(err,result)=>{
+        if(err)
+            {
+                res.send(err)
+            }else{
+                res.send(result)
+            }
+    })
+})
+
+app.delete('/deleteforum/:id',(req,res)=>{
+    const id = req.params.id
+    const delete_query = 'DELETE FROM public."forum" WHERE id = $1'
     con.query(delete_query,[id],(err,result)=>{
         if(err)
             {
@@ -525,6 +563,16 @@ app.get("/users/forum", async (req,res)=>{
     }
 })
 
+app.get("/users/forumAdmin", async (req,res)=>{
+    try{
+        const { rows } = await con.query(`SELECT * FROM public."forum" ORDER BY dateCreation DESC`)
+        res.render('forumAdmin.ejs', {posts : rows , user : req.user})
+    } catch(err) {
+        console.log(err)
+        res.send("Erreur lors du chargement du forum")
+    }
+})
+
 app.post('/users/formForum', async (req,res)=>{
     const login = req.user?.login
     const {titre, texte} = req.body
@@ -538,7 +586,10 @@ app.post('/users/formForum', async (req,res)=>{
             [login, titre, texte]
         )
         req.flash('success_msg', 'Post ajouté avec succès !')
-        res.redirect('/users/forum')
+        if(req.user?.userType == 'admin')
+            res.redirect('/users/forumAdmin')
+        else
+            res.redirect('/users/forum')
     }catch(err){
         console.error(err);
         req.flash('error_msg', 'Erreur lors de l’ajout du post.')

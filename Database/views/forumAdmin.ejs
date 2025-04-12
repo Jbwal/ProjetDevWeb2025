@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Forum</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="../style/daforum.css">
+</head>
+<body>
+    <div class="decoration decoration-1"></div>
+    <div class="decoration decoration-2"></div>
+
+    <% if (success_msg && success_msg.length > 0) { %>
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i> <%= success_msg %>
+        </div>
+    <% } %>
+    
+    <% if (error_msg && error_msg.length > 0) { %>
+        <div class="alert alert-danger">
+            <i class="fas fa-exclamation-circle"></i> <%= error_msg %>
+        </div>
+    <% } %>
+
+    <div class="header-container">
+        <a href="/users/dashboard<%= user.userType.charAt(0).toUpperCase() + user.userType.slice(1) %>" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Retour
+        </a>
+    </div>
+
+    <h1>Forum</h1>
+    
+    <a href="/users/formForum" class="create-btn">
+        <i class="fas fa-plus"></i> Créer un post
+    </a>
+
+    <% posts.forEach(post => { %>
+        <div class="container">
+            <div class="title"><%= post.titre %></div>
+            <div class="author">Posté par <%= post.login %></div>
+            <div class="content"><%= post.texte %></div>
+            <div class="date">Créé le <%= new Date(post.datecreation).toLocaleString('fr-FR') %></div>
+            <button class="delete-btn" data-id="<%= post.id %>">Supprimer</button>
+        </div>
+    <% }) %>
+
+    <script>
+    document.querySelectorAll('.delete-btn').forEach(button => {
+    button.addEventListener('click', async () => {
+        const forumId = button.dataset.id;
+        const confirmDelete = confirm("Es-tu sûr de vouloir supprimer ce post ?");
+
+        if (confirmDelete) {
+            const response = await fetch(`/deleteforum/${forumId}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                // Supprimer le post
+                const container = button.closest('.container');
+                container.remove();
+
+                let flashContainer = document.getElementById('flash-container');
+                if (!flashContainer) {
+                    flashContainer = document.createElement('div');
+                    flashContainer.id = 'flash-container';
+                    flashContainer.style.position = 'fixed';
+                    flashContainer.style.top = '20px';
+                    flashContainer.style.left = '0';
+                    flashContainer.style.right = '0';
+                    flashContainer.style.zIndex = '9999';
+                    flashContainer.style.display = 'flex';
+                    flashContainer.style.justifyContent = 'center';
+                    flashContainer.style.pointerEvents = 'none';
+                    document.body.appendChild(flashContainer);
+                }
+
+                // Crée le message flash
+                const flash = document.createElement('div');
+                flash.innerHTML = `<i class="fas fa-check-circle"></i> Post supprimé avec succès !`;
+                flash.style.backgroundColor = '#4CAF50';
+                flash.style.color = 'white';
+                flash.style.padding = '12px 24px';
+                flash.style.borderRadius = '8px';
+                flash.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+                flash.style.fontWeight = 'bold';
+                flash.style.maxWidth = '80%';
+                flash.style.textAlign = 'center';
+                flash.style.pointerEvents = 'auto';
+
+
+                flashContainer.appendChild(flash);
+
+                requestAnimationFrame(() => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+
+                setTimeout(() => flash.remove(), 3000);
+            } else {
+                alert("Une erreur est survenue lors de la suppression.");
+            }
+        }
+    });
+});
+</script>
+
+</body>
+</html>

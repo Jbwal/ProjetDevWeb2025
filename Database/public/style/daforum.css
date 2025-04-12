@@ -213,3 +213,35 @@ h1 {
         padding: 1rem;
     }
 }
+
+.delete-btn {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.8rem;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.delete-btn:hover {
+    background-color: #c0392b;
+    transform: translateY(-2px);
+}
+
+.alert {
+    padding: 10px;
+    text-align: center;
+    width: 100%;
+    font-weight: bold;
+}
+.alert-success {
+    background-color: #4CAF50;
+    color: white;
+}
+.alert-danger {
+    background-color: #f44336;
+    color: white;
+}
