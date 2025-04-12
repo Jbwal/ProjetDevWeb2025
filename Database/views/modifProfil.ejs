@@ -20,7 +20,8 @@
             <h1><%= user.login %></h1>
         </div>
         <div class="profile-body">
-            <form action="/update/<%=user.id%>" method="POST"></form>
+
+            <form action="/update/<%=user.id%>" method="POST">
                 <div class="profile-info">
                     <div class="info-item">
                         <div class="info-label">Prénom</div>
@@ -62,8 +63,8 @@
                     </div>
                     <br>
                 </div>
-                    <div class="profile-submit">
-                        <button class="btn" width="800px" type="submit">Enregistrer les modifications</button>
+                <div class="profile-submit">
+                    <button class="btn" width="800px" type="submit">Enregistrer les modifications</button>
                 </div>
             </form>
         </div>
@@ -87,6 +88,5 @@
         }
     });
     </script>
-
 </body>
 </html>
