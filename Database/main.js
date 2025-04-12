@@ -511,6 +511,41 @@ app.get('/users/actualites', (req,res)=>{
     res.render('actualites.ejs', {user: req.user})
 })
 
+app.get('/users/formForum', (req,res)=>{
+    res.render('formForum.ejs', {user: req.user})
+})
+
+app.get("/users/forum", async (req,res)=>{
+    try{
+        const { rows } = await con.query(`SELECT * FROM public."forum" ORDER BY dateCreation DESC`)
+        res.render('forum.ejs', {posts : rows , user : req.user})
+    } catch(err) {
+        console.log(err)
+        res.send("Erreur lors du chargement du forum")
+    }
+})
+
+app.post('/users/formForum', async (req,res)=>{
+    const login = req.user?.login
+    const {titre, texte} = req.body
+
+    if(!login)
+        return res.status(401).send("Utilisateur non connecté.")
+
+    try{
+        await con.query(
+            'INSERT INTO public."forum" (login, titre, texte) VALUES ($1, $2, $3)',
+            [login, titre, texte]
+        )
+        req.flash('success_msg', 'Post ajouté avec succès !')
+        res.redirect('/users/forum')
+    }catch(err){
+        console.error(err);
+        req.flash('error_msg', 'Erreur lors de l’ajout du post.')
+        res.redirect('/users/formForum')
+    }
+})
+
 app.get("/users/logout", (req,res) => {
     req.logOut(function(err) {
         if (err) { return next(err); }

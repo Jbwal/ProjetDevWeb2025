@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créer un nouveau post</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="../style/daformforum.css">
+</head>
+<body>
+
+    <div class="decoration decoration-1"></div>
+    <div class="decoration decoration-2"></div>
+
+    <div class="header-container">
+        <a href="/users/forum" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Retour au forum
+        </a>
+    </div>
+
+    <h1>Créer un nouveau post</h1>
+
+    <% if (error_msg && error_msg.length > 0) { %>
+        <div class="alert alert-danger">
+            <i class="fas fa-exclamation-circle"></i> <%= error_msg %>
+        </div>
+    <% } %>
+
+    <div class="container">
+        <form action="/users/formForum" method="POST">
+            <div class="form-group">
+                <label for="titre">Titre du post</label>
+                <input type="text" id="titre" name="titre" required>
+            </div>
+
+            <div class="form-group">
+                <label for="texte">Contenu</label>
+                <textarea id="texte" name="texte" rows="6" required></textarea>
+            </div>
+
+            <div class="form-footer">
+                <button type="button" class="btn btn-outline" onclick="window.location.href='/users/forum'">Annuler</button>
+                <button type="submit" class="btn">Publier</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

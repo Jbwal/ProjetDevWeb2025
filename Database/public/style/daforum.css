@@ -1,0 +1,215 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500&display=swap');
+        
+:root {
+    --primary: #9c8861;
+    --dark: #212121;
+    --light: #f8f5f1;
+    --accent: #d4b78f;
+    --transition: all 0.4s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--light);
+    color: var(--dark);
+    min-height: 100vh;
+    padding: 2rem;
+    position: relative;
+}
+
+.header-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    color: var(--primary);
+    text-decoration: none;
+    padding: 0.6rem 1.2rem;
+    border: 1px solid var(--primary);
+    border-radius: 4px;
+    transition: var(--transition);
+}
+
+.back-btn:hover {
+    background-color: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.back-btn i {
+    margin-right: 8px;
+}
+
+h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 2.5rem;
+    color: var(--primary);
+    text-align: center;
+    margin-bottom: 2rem;
+    letter-spacing: 2px;
+}
+
+.create-btn {
+    display: block;
+    max-width: 200px;
+    margin: 0 auto 2rem;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: var(--transition);
+    border-radius: 4px;
+    text-decoration: none;
+    text-align: center;
+}
+
+.create-btn:hover {
+    background-color: var(--accent);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.container {
+    max-width: 700px;
+    margin: 0 auto 2rem;
+    padding: 2rem;
+    border: none;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: var(--transition);
+}
+
+.container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 500;
+    margin-bottom: 0.8rem;
+    color: var(--dark);
+}
+
+.author {
+    font-style: italic;
+    color: var(--primary);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.author::before {
+    content: "\f007";
+    font-family: "Font Awesome 5 Free";
+    margin-right: 8px;
+    color: var(--accent);
+}
+
+.content {
+    margin: 1.5rem 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.date {
+    font-size: 0.85em;
+    color: #888;
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.date::before {
+    content: "\f017";
+    font-family: "Font Awesome 5 Free";
+    margin-right: 8px;
+    color: var(--accent);
+}
+
+.alert {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 4px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: slideDown 0.5s forwards;
+}
+
+@keyframes slideDown {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.alert-success {
+    background-color: rgba(76, 175, 80, 0.1);
+    color: #4CAF50;
+    border-left: 4px solid #4CAF50;
+}
+
+.alert-danger {
+    background-color: rgba(244, 67, 54, 0.1);
+    color: #F44336;
+    border-left: 4px solid #F44336;
+}
+
+.decoration {
+    position: fixed;
+    width: 300px;
+    height: 300px;
+    background-color: var(--accent);
+    opacity: 0.05;
+    border-radius: 50%;
+    z-index: -1;
+}
+
+.decoration-1 {
+    top: -100px;
+    right: -100px;
+}
+
+.decoration-2 {
+    bottom: -100px;
+    left: -100px;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1.5rem;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    body {
+        padding: 1rem;
+    }
+}

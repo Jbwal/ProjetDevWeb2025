@@ -1,0 +1,226 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500&display=swap');
+
+:root {
+    --primary: #9c8861;
+    --dark: #212121;
+    --light: #f8f5f1;
+    --accent: #d4b78f;
+    --transition: all 0.4s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--light);
+    color: var(--dark);
+    min-height: 100vh;
+    padding: 2rem;
+    position: relative;
+}
+
+.header-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    color: var(--primary);
+    text-decoration: none;
+    padding: 0.6rem 1.2rem;
+    border: 1px solid var(--primary);
+    border-radius: 4px;
+    transition: var(--transition);
+}
+
+.back-btn:hover {
+    background-color: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.back-btn i {
+    margin-right: 8px;
+}
+
+h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 2.5rem;
+    color: var(--primary);
+    text-align: center;
+    margin-bottom: 2rem;
+    letter-spacing: 2px;
+}
+
+.container {
+    background-color: white;
+    padding: 3rem;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    width: 100%;
+    max-width: 650px;
+    margin: 0 auto;
+    transition: var(--transition);
+}
+
+.container:hover {
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    transform: translateY(-5px);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--dark);
+}
+
+input, textarea {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    transition: var(--transition);
+    background-color: #ffffff;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(156, 136, 97, 0.1);
+}
+
+textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.form-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+}
+
+.btn {
+    display: inline-block;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: var(--transition);
+    border-radius: 4px;
+}
+
+.btn:hover {
+    background-color: var(--accent);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+}
+
+.btn-outline:hover {
+    background-color: var(--primary);
+    color: white;
+}
+
+.alert {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 4px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    text-align: center;
+    max-width: 650px;
+    margin-left: auto;
+    margin-right: auto;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: slideDown 0.5s forwards;
+}
+
+@keyframes slideDown {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.alert-danger {
+    background-color: rgba(244, 67, 54, 0.1);
+    color: #F44336;
+    border-left: 4px solid #F44336;
+}
+
+.decoration {
+    position: fixed;
+    width: 300px;
+    height: 300px;
+    background-color: var(--accent);
+    opacity: 0.05;
+    border-radius: 50%;
+    z-index: -1;
+}
+
+.decoration-1 {
+    top: -100px;
+    right: -100px;
+}
+
+.decoration-2 {
+    bottom: -100px;
+    left: -100px;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 2rem;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    body {
+        padding: 1rem;
+    }
+    
+    .form-footer {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .btn {
+        width: 100%;
+        text-align: center;
+    }
+}
