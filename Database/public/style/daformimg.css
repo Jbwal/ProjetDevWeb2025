@@ -15,6 +15,35 @@
     box-sizing: border-box;
 }
 
+/* Header avec titre et bouton retour */
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.back-btn {
+    display: inline-block;
+    font-size: 0.95rem;
+    color: var(--dark);
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: var(--transition);
+    background-color: rgba(156, 136, 97, 0.1);
+    position: relative;
+    left: 0;
+    white-space: nowrap;
+    
+}
+
+.back-btn:hover {
+    background-color: var(--primary);
+    color: white;
+}
+
 body {
     font-family: 'Montserrat', sans-serif;
     background-color: var(--light);
