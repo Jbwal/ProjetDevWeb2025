@@ -8,6 +8,8 @@ const passport = require('passport')
 const transporter = require('./Emailconfig')
 const crypto = require('crypto')
 const path = require('path')
+const multer = require('multer')
+const fs = require('fs')
 
 const initializePassport = require('./passportConfig')
 
@@ -38,8 +40,53 @@ app.use((req, res, next) => {
     next();
 });
 
+const storage = multer.diskStorage({
+    destination: './public/img/',
+    filename: (req, file, cb) => {
+      const uniqueName = Date.now() + '-' + file.originalname
+      cb(null, uniqueName)
+    }
+  })
+  
+  const upload = multer({ storage });
+
+app.post('/newimg', upload.single('image'), async (req, res) => {
+    const filename = req.file.filename
+    const imagePath = `/img/${filename}`
+    const userid = req.user?.id
+  
+    try {
+
+        const { rows } = await con.query(
+            'SELECT img FROM public."UserHotel" WHERE id = $1',
+            [userid]
+          )
+      
+        const oldImage = rows[0]?.img
+
+        if (oldImage && !oldImage.includes('default.jpg')) {
+            const fullPath = path.join(__dirname, 'public', oldImage);
+            fs.unlink(fullPath, (err) => {
+              if (err) {
+                console.warn('Erreur lors de la suppression de l\'ancienne image :', err.message)
+              } else {
+                console.log('Ancienne image supprimée avec succès.')
+              }
+            })
+          }
 
 
+        const result = await con.query(
+            'UPDATE public."UserHotel" SET img=$1 WHERE id=$2 RETURNING *',
+            [imagePath, userid]
+        )
+        req.flash('success_msg', 'Profil mis à jour avec succès !')
+        res.redirect('/users/profil')
+        } catch (err) {
+        console.error(err)
+        res.status(500).send('Erreur serveur')
+        }
+})
 
 const cors = require('cors')
 const { error } = require('console')
@@ -218,7 +265,7 @@ app.get('/fetchData',(req,res)=>{
         const allowedOrders = ['asc', 'desc']
 
         if (!allowedFields.includes(sortField) || !allowedOrders.includes(sortOrder)) { // pour éviter injections sql
-            return res.status(400).send('Paramètres de tri invalides.');
+            return res.status(400).send('Paramètres de tri invalides.')
         }
 
         const fetch_query = `SELECT * FROM public."UserHotel" ORDER BY "${sortField}" ${sortOrder}`
@@ -605,6 +652,9 @@ app.get("/users/logout", (req,res) => {
     });
 });
 
+app.get('/users/formimg', (req,res)=>{
+    res.render('formimg.ejs', {user: req.user})
+})
 
 /*con.query('Select * from userdemo',(err,res)=>{
     if(!err)

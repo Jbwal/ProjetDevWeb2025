@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Uploader une image</title>
+  <link rel="stylesheet" href="../style/daformimg.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="header-container">
+        <a href="/users/dashboard<%= user.userType.charAt(0).toUpperCase() + user.userType.slice(1) %>" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Retour
+        </a>
+    </div>
+
+  <h1>Uploader une image utilisateur</h1>
+
+
+  <form action="http://localhost:3000/newimg" method="POST" enctype="multipart/form-data">
+    <label for="image">Choisir une image :</label>
+    <input type="file" name="image" id="image" accept="image/*" required>
+
+    <button type="submit">Envoyer</button>
+  </form>
+
+  <div class="preview" id="preview"></div>
+
+  <script>
+    const imageInput = document.getElementById('image');
+    const preview = document.getElementById('preview');
+
+    imageInput.addEventListener('change', function () {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+          preview.innerHTML = `<p>Prévisualisation :</p><img src="${e.target.result}" alt="Image sélectionnée">`;
+        };
+
+        reader.readAsDataURL(file);
+      }
+    });
+  </script>
+</body>
+</html>

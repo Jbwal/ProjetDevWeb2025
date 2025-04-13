@@ -1,0 +1,192 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500&display=swap');
+
+:root {
+    --primary: #9c8861;
+    --dark: #212121;
+    --light: #f8f5f1;
+    --accent: #d4b78f;
+    --light-accent: #f0ebe2;
+    --transition: all 0.4s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--light);
+    color: var(--dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3rem;
+}
+
+h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    color: var(--primary);
+    letter-spacing: 2px;
+    text-align: center;
+    animation: fadeIn 0.6s ease-out;
+}
+
+form {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 600px;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    animation: fadeIn 0.8s ease-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+label {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--primary);
+    margin-bottom: 1rem;
+    font-weight: 500;
+    align-self: flex-start;
+}
+
+input[type="file"] {
+    width: 100%;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border: 2px dashed var(--accent);
+    border-radius: 6px;
+    background-color: var(--light-accent);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+input[type="file"]:hover {
+    border-color: var(--primary);
+    background-color: rgba(212, 183, 143, 0.1);
+}
+
+input[type="file"]:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(156, 136, 97, 0.3);
+}
+
+button[type="submit"] {
+    display: inline-block;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 1rem 2.5rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: var(--transition);
+    border-radius: 6px;
+    white-space: nowrap;
+    text-decoration: none;
+    min-width: 200px;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+button[type="submit"]:hover {
+    background-color: var(--accent);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.preview {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 600px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeIn 1s ease-out;
+    overflow: hidden;
+    min-height: 100px;
+}
+
+.preview p {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+}
+
+.preview img {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    animation: zoomIn 0.5s ease;
+}
+
+.preview img:hover {
+    transform: scale(1.03);
+}
+
+/* Animation de fade-in */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Animation de zoom-in */
+@keyframes zoomIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Media queries pour la responsivité */
+@media (max-width: 768px) {
+    body {
+        padding: 1.5rem;
+    }
+    
+    form, .preview {
+        padding: 1.5rem;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+}
+
+/* Style pour file input personnalisé */
+input[type="file"]::file-selector-button {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    font-family: 'Montserrat', sans-serif;
+    margin-right: 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+input[type="file"]::file-selector-button:hover {
+    background-color: var(--accent);
+}
