@@ -28,10 +28,11 @@
     </div>
 
     <h1>Forum</h1>
-    
-    <a href="/users/formForum" class="create-btn">
-        <i class="fas fa-plus"></i> Créer un post
-    </a>
+    <% if(user.userType =! 'simple'){ %>
+        <a href="/users/formForum" class="create-btn">
+            <i class="fas fa-plus"></i> Créer un post
+        </a>
+    <%}%>
 
     <% posts.forEach(post => { %>
         <div class="container">

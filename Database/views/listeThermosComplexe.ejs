@@ -106,12 +106,7 @@
                             <tbody>
                                 <% devices.forEach(device => { %>
                                     <tr>
-                                        <td><%= device.id %>
-                                            <br>
-                                            <% if (device.demandesuppr) { %>
-                                                <p>Suppression demandée !</p>
-                                            <%}%>
-                                            </td>
+                                        <td><%= device.id %></td>
                                         <td><%= device.name %></td>
                                         <td><%= device.brand %></td>
                                         <td><%= device.status %></td>
@@ -122,7 +117,13 @@
                                         <td><%= device.goalTemp %> °C</td>
                                         <td><%= new Date(device.lastInteraction).toLocaleString('fr-FR') %></td>
                                         <td>
-                                            <button class="delete-btn" data-id="<%= device.id %>">Supprimer</button>
+                                            <% if (!device.demandesuppr) { %>
+                                                <form action="/thermos/asksuppr/<%= device.id %>" method="POST">
+                                                  <button>Demander la suppression</button>
+                                                </form>
+                                              <% } else { %>
+                                                <p>Suppression demandée</p>
+                                              <% } %>
                                             <form action="/thermos/toggle/<%= device.id %>" method="POST" style="display:inline;">
                                                 <button type="submit">
                                                   Passer en <%= device.status === 'Actif' ? 'Inactif' : 'Actif' %>

@@ -8,6 +8,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+
+    <% if (success_msg) { %>
+        <div class="alert alert-success"><%= success_msg %></div>
+    <% } %>
+    <% if (error_msg) { %>
+        <div class="alert alert-danger"><%= error_msg %></div>
+    <% } %>
+
     <!-- Page Dashboard -->
     <div class="dashboard">
         <header class="admin-header">
@@ -71,18 +79,18 @@
         
         <div class="dashboard-content">
             <div class="dashboard-card">
-                <h2 class="dashboard-title">Thermomètres Disponibles</h2>
-
+                <h2 class="dashboard-title">Objets Disponibles</h2>
+                <% if (user) { %>
                     <!-- Barre de recherche -->
-                    <a href="/users/listeObjetsAdmin" class="login-button">
-                        <i class="fa-solid fa-box"></i> Objets
+                    <a href="/users/listeThermosComplexe" class="login-button">
+                        <i class="fa-solid fa-temperature-empty"></i> Thermomètres
                     </a>
                     <div class="search-container">
                         <input type="text" id="search-input" placeholder="Rechercher un objet...">
                         <button class="btn btn-search" id="search-button">Rechercher</button>
                     </div>
-                    <a href="/thermos/add">
-                        <button>➕ Ajouter un thermostat</button>
+                    <a href="/device/add">
+                        <button>➕ Ajouter un objet</button>
                     </a>
                     <!-- Liste des objets -->
                     <div class="objects-container" id="objects-list">
@@ -92,13 +100,12 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Nom</th>
+                                    <th>Type</th>
                                     <th>Marque</th>
+                                    <th>Localisation</th>
                                     <th>Status</th>
                                     <th>Type de connexion</th>
                                     <th>Niveau de Batterie</th>
-                                    <th>Localisation</th>
-                                    <th>Température Actuelle</th>
-                                    <th>Température Cible</th>
                                     <th>Dernière Interaction</th>
                                     <th>Action</th>
                                 </tr>
@@ -106,37 +113,42 @@
                             <tbody>
                                 <% devices.forEach(device => { %>
                                     <tr>
-                                        <td><%= device.id %>
-                                            <br>
-                                            <% if (device.demandesuppr) { %>
-                                                <p>Suppression demandée !</p>
-                                            <%}%>
-                                            </td>
+                                        <td><%= device.id %></td>
                                         <td><%= device.name %></td>
+                                        <td><%= device.deviceType %></td>
                                         <td><%= device.brand %></td>
+                                        <td><%= device.localisation %></td>
                                         <td><%= device.status %></td>
                                         <td><%= device.connectionType %></td>
                                         <td><%= device.batteryLevel.toFixed(2) %>%</td>
-                                        <td><%= device.localisation%></td>
-                                        <td><%= device.currentTemp %> °C</td>
-                                        <td><%= device.goalTemp %> °C</td>
                                         <td><%= new Date(device.lastInteraction).toLocaleString('fr-FR') %></td>
                                         <td>
-                                            <button class="delete-btn" data-id="<%= device.id %>">Supprimer</button>
-                                            <form action="/thermos/toggle/<%= device.id %>" method="POST" style="display:inline;">
+                                            <% if (!device.demandesuppr) { %>
+                                                <form action="/device/asksuppr/<%= device.id %>" method="POST">
+                                                  <button>Demander la suppression</button>
+                                                </form>
+                                              <% } else { %>
+                                                <p>Suppression demandée</p>
+                                              <% } %>
+
+                                            <form action="/device/toggle/<%= device.id %>" method="POST" style="display:inline;">
                                                 <button type="submit">
                                                   Passer en <%= device.status === 'Actif' ? 'Inactif' : 'Actif' %>
                                                 </button>
                                             </form>
-                                            <a href="/thermos/edit/<%= device.id %>">
+                                            <a href="/device/edit/<%= device.id %>">
                                                 <button>Modifier</button>
                                             </a>
+                                            </div>
                                         </td>
                                     </tr>
                                 <% }) %>
                             </tbody>
                         </table>
                     </div>
+                <% } else {%>
+                    <p class="login-required-message">Connectez-vous pour voir tous les détails des objets disponibles.</p>
+                <% } %>
             </div>
         </div>
     </div>
@@ -147,7 +159,7 @@
                 const confirmDelete = confirm("Es-tu sûr de vouloir supprimer ce objet ?")
         
                 if (confirmDelete) {
-                    const response = await fetch(`/deletethermo/${deviceID}`, {
+                    const response = await fetch(`/deletedevice/${deviceID}`, {
                         method: 'DELETE'
                     });
         
@@ -158,7 +170,7 @@
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                         // message flash
                         const flash = document.createElement('div')
-                        flash.textContent = "Utilisateur supprimé avec succès !"
+                        flash.textContent = "Objet supprimé avec succès !"
                         flash.style.background = "green"
                         flash.style.color = "white"
                         flash.style.padding = "10px"
@@ -200,7 +212,7 @@
                 const searchTerm = searchInput.value.trim();
                 
                 // Construire l'URL avec le paramètre de recherche
-                let url = '/users/listeThermosAdmin';
+                let url = '/users/listeObjetsAdmin';
                 
                 // Ajouter le paramètre de recherche si un terme est fourni
                 if (searchTerm) {
@@ -224,6 +236,7 @@
             // Initialiser l'input avec le terme de recherche actuel
             populateSearchInput();
         });
+
     </script>
     <script src="../js/scriptindex.js"></script>
     <script src="scriptobjet.js"></script>

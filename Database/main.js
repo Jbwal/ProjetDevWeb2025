@@ -1,6 +1,7 @@
 const {Client}=require('pg')
 const { pool } = require("./dbConfig")
-const { updateBatteryLevels } = require('./batteryService')
+const { updateBatteryLevels, updateBatteryLevelsThermos } = require('./batteryService')
+const { updateThermostats } = require('./thermostatService')
 const express = require('express')
 const bcrypt = require('bcrypt')
 const session = require('express-session')
@@ -44,6 +45,8 @@ app.use((req, res, next) => {
 
 cron.schedule('*/10 * * * * *', () =>{
     updateBatteryLevels()
+    updateBatteryLevelsThermos()
+    updateThermostats()
 })
 
 const storage = multer.diskStorage({
@@ -185,6 +188,36 @@ app.post('/postData', async (req,res)=>{
         });
     }
 })
+
+function updatePoints(userId){
+    con.query(
+        `UPDATE public."UserHotel" SET "pointsTotal" = "pointsTotal" + 0.25 WHERE id = $1`,
+        [userId]
+    )
+    const result = con.query(`
+    SELECT "pointsTotal", "userType" FROM public."UserHotel" WHERE "id" = $1`,
+    [userId],(err,result)=>{
+        if(err) return result.send(err)
+
+        if (result.rows.length > 0) {
+            const { pointsTotal, userType } = result.rows[0]
+            let newType = userType
+            if (pointsTotal >= 5000 && userType !== 'admin') {
+                newType = 'admin';
+            } else if (pointsTotal >= 1000 && userType !== 'complexe' && userType !== 'admin') {
+                newType = 'complexe';
+            }
+            if (newType !== userType) {
+                con.query(`
+                    UPDATE "UserHotel" SET "userType" = $1 WHERE "id" = $2`, 
+                    [newType, userId]
+            )
+                console.log(`Utilisateur promu : ${userType} → ${newType}`);
+        }
+    }
+})
+
+}
 
 app.post('/users/login', passport.authenticate('local', {
     failureRedirect: '/users/login',
@@ -365,6 +398,35 @@ app.get('/users/listeObjetsAdmin', (req, res) => {
     })
 })
 
+app.get('/users/listeObjetsComplexe', (req, res) => {
+    // Vérification du type d'utilisateur
+    // Récupération du terme de recherche
+    const recherche = req.query.search || '';
+
+    // Requête SQL pour les administrateurs (peut avoir des informations supplémentaires)
+    let fetch_query = `SELECT * FROM public."Device"`
+    const params =[]
+
+    // Ajout de la condition de recherche si un terme est fourni
+    if (recherche) {
+        fetch_query += ` WHERE name LIKE $1 OR "deviceType" LIKE $1 OR brand LIKE $1 OR status LIKE $1`
+        params.push(`%${recherche}%`)
+    }
+
+    con.query(fetch_query, params, (err, result) => {
+        if (err) {
+            res.send(err)
+        } else {
+            // Rendu de la page avec les données des appareils et l'utilisateur courant
+            res.render('listeObjetsComplexe', { 
+                devices: result.rows,
+                user: req.user,
+                recherche: recherche //renvoie le terme de recherche
+            })
+        }
+    })
+})
+
 app.get('/users/listeThermos', (req, res) => {
     // Vérification du type d'utilisateur
     // Récupération du terme de recherche
@@ -415,6 +477,35 @@ app.get('/users/listeThermosAdmin', (req, res) => {
         } else {
             // Rendu de la page avec les données des appareils et l'utilisateur courant
             res.render('listeThermosAdmin', { 
+                devices: result.rows,
+                user: req.user,
+                recherche: recherche //renvoie le terme de recherche
+            })
+        }
+    })
+})
+
+app.get('/users/listeThermosComplexe', (req, res) => {
+    // Vérification du type d'utilisateur
+    // Récupération du terme de recherche
+    const recherche = req.query.search || '';
+
+    // Requête SQL pour les administrateurs (peut avoir des informations supplémentaires)
+    let fetch_query = `SELECT * FROM public."Thermostats"`
+    const params =[]
+
+    // Ajout de la condition de recherche si un terme est fourni
+    if (recherche) {
+        fetch_query += ` WHERE name LIKE $1 OR brand LIKE $1 OR status LIKE $1`
+        params.push(`%${recherche}%`)
+    }
+
+    con.query(fetch_query, params, (err, result) => {
+        if (err) {
+            res.send(err)
+        } else {
+            // Rendu de la page avec les données des appareils et l'utilisateur courant
+            res.render('listeThermosComplexe', { 
                 devices: result.rows,
                 user: req.user,
                 recherche: recherche //renvoie le terme de recherche
@@ -531,6 +622,70 @@ app.post('/updatePoints/:id', (req, res) => {
         }
     )
 })
+
+app.post('/device/toggle/:id', async (req, res) => {
+    const deviceId = req.params.id
+    const userId = req.user?.id
+    const userType = req.user?.userType
+  
+    try {
+      const { rows } = await con.query(
+        `SELECT status FROM public."Device" WHERE id = $1`, 
+        [deviceId]
+      )
+  
+      const currentStatus = rows[0]?.status
+  
+      if (!currentStatus) return res.status(404).send("Appareil introuvable")
+  
+      const newStatus = currentStatus === 'Actif' ? 'Inactif' : 'Actif'
+  
+      await con.query(
+        `UPDATE public."Device" SET status = $1 WHERE id = $2`, 
+        [newStatus, deviceId]
+      )
+      updatePoints(userId)
+      req.flash('success_msg', `Statut changé en "${newStatus}"`)
+      res.redirect(`/users/listeObjets${userType.charAt(0).toUpperCase() + userType.slice(1)}`) 
+    } catch (err) {
+      console.error(err)
+      req.flash('error_msg', 'Erreur lors du changement de statut')
+      res.redirect(`/users/listeObjets${userType.charAt(0).toUpperCase() + userType.slice(1)}`)
+    }
+  })
+
+  app.post('/thermos/toggle/:id', async (req, res) => {
+    const deviceId = req.params.id
+    const userId = req.user?.id
+    const userType = req.user?.userType
+  
+    try {
+      const { rows } = await con.query(
+        `SELECT status FROM public."Thermostats" WHERE id = $1`, 
+        [deviceId]
+      )
+  
+      const currentStatus = rows[0]?.status
+  
+      if (!currentStatus) return res.status(404).send("Appareil introuvable")
+  
+      const newStatus = currentStatus === 'Actif' ? 'Inactif' : 'Actif'
+  
+      await con.query(
+        `UPDATE public."Thermostats" SET status = $1 WHERE id = $2`, 
+        [newStatus, deviceId]
+      )
+      updatePoints(userId)
+      req.flash('success_msg', `Statut changé en "${newStatus}"`)
+      res.redirect(`/users/listeThermos${userType.charAt(0).toUpperCase() + userType.slice(1)}`) 
+    } catch (err) {
+      console.error(err)
+      req.flash('error_msg', 'Erreur lors du changement de statut')
+      res.redirect(`/users/listeThermos${userType.charAt(0).toUpperCase() + userType.slice(1)}`)
+    }
+  })
+  
+  
 
 app.delete('/delete/:id',(req,res)=>{
     const id = req.params.id
@@ -715,7 +870,231 @@ app.get('/users/liste', async (req, res) => {
       console.error(err);
       res.status(500).send('Erreur serveur')
     }
+})
+
+app.get('/device/edit/:id', async (req, res) => {
+    const deviceId = req.params.id
+    const userType = req.user?.userType
+  
+    try {
+      const { rows } = await con.query(`SELECT * FROM public."Device" WHERE id = $1`, [deviceId])
+  
+      if (rows.length === 0) {
+        req.flash('error_msg', 'Appareil introuvable.')
+        return res.redirect(`/users/listeObjets${userType.charAt(0).toUpperCase() + userType.slice(1)}`)
+      }
+  
+      res.render('modifobjet.ejs', { device: rows[0], user: req.user })
+    } catch (err) {
+      console.error(err)
+      req.flash('error_msg', 'Erreur serveur')
+      res.redirect(`/users/listeObjets${userType.charAt(0).toUpperCase() + userType.slice(1)}`)
+    }
+})
+
+app.post('/device/edit/:id', async (req, res) => {
+    const deviceId = req.params.id
+    const userType = req.user?.userType
+    const userId = req.user?.id
+    const { name, deviceType, brand, connectionType, localisation} = req.body
+  
+    try {
+      await con.query(`
+        UPDATE public."Device"
+        SET name = $1, "deviceType" = $2, brand = $3, "connectionType" = $4, "localisation" = $5
+        WHERE id = $6
+      `, [name, deviceType, brand, connectionType, localisation,  deviceId])
+  
+      updatePoints(userId)
+      req.flash('success_msg', 'Appareil mis à jour avec succès !')
+      res.redirect(`/users/listeObjets${userType.charAt(0).toUpperCase() + userType.slice(1)}`)
+    } catch (err) {
+      console.error(err)
+      req.flash('error_msg', 'Erreur lors de la mise à jour')
+      res.redirect(`/users/listeObjets${userType.charAt(0).toUpperCase() + userType.slice(1)}`)
+    }
+})
+
+app.get('/thermos/edit/:id', async (req, res) => {
+    const deviceId = req.params.id
+    const userType = req.user?.userType
+  
+    try {
+      const { rows } = await con.query(`SELECT * FROM public."Thermostats" WHERE id = $1`, [deviceId])
+  
+      if (rows.length === 0) {
+        req.flash('error_msg', 'Appareil introuvable.')
+        return res.redirect(`/users/listeThermos${userType.charAt(0).toUpperCase() + userType.slice(1)}`)
+      }
+  
+      res.render('modifthermos.ejs', { device: rows[0], user: req.user })
+    } catch (err) {
+      console.error(err)
+      req.flash('error_msg', 'Erreur serveur')
+      res.redirect(`/users/listeThermos${userType.charAt(0).toUpperCase() + userType.slice(1)}`)
+    }
+})
+
+app.post('/thermos/edit/:id', async (req, res) => {
+    const deviceId = req.params.id
+    const userType = req.user?.userType
+    const userId = req.user?.id
+    const { name, brand, connectionType, localisation, goalTemp} = req.body
+  
+    try {
+      await con.query(`
+        UPDATE public."Thermostats"
+        SET name = $1, brand = $2, "connectionType" = $3, "localisation" = $4, "goalTemp" = $5
+        WHERE id = $6
+      `, [name, brand, connectionType, localisation, goalTemp,  deviceId])
+  
+      updatePoints(userId)
+      req.flash('success_msg', 'Appareil mis à jour avec succès !')
+      res.redirect(`/users/listeThermos${userType.charAt(0).toUpperCase() + userType.slice(1)}`)
+    } catch (err) {
+      console.error(err)
+      req.flash('error_msg', 'Erreur lors de la mise à jour')
+      res.redirect(`/users/listeThermos${userType.charAt(0).toUpperCase() + userType.slice(1)}`)
+    }
+})
+
+app.post('/device/asksuppr/:id', async (req, res) => {
+    const deviceId = req.params.id
+    const userType = req.user?.userType
+    const userId = req.user?.id
+  
+    try {
+      await con.query(`
+        UPDATE public."Device"
+        SET demandesuppr = 'true'
+        WHERE id = $1
+      `, [deviceId])
+  
+      updatePoints(userId)
+      req.flash('success_msg', 'Demande prise en compte !')
+      res.redirect(`/users/listeObjets${userType.charAt(0).toUpperCase() + userType.slice(1)}`)
+    } catch (err) {
+      console.error(err)
+      req.flash('error_msg', 'Erreur lors de la demande')
+      res.redirect(`/users/listeObjets${userType.charAt(0).toUpperCase() + userType.slice(1)}`)
+    }
+})
+
+app.post('/thermos/asksuppr/:id', async (req, res) => {
+    const deviceId = req.params.id
+    const userType = req.user?.userType
+    const userId = req.user?.id
+  
+    try {
+      await con.query(`
+        UPDATE public."Thermostats"
+        SET demandesuppr = 'true'
+        WHERE id = $1
+      `, [deviceId])
+  
+      updatePoints(userId)
+      req.flash('success_msg', 'Demande prise en compte !')
+      res.redirect(`/users/listeThermos${userType.charAt(0).toUpperCase() + userType.slice(1)}`)
+    } catch (err) {
+      console.error(err)
+      req.flash('error_msg', 'Erreur lors de la demande')
+      res.redirect(`/users/listeThermos${userType.charAt(0).toUpperCase() + userType.slice(1)}`)
+    }
+})
+  
+app.get('/device/add', (req, res) => {
+    res.render('addDevice', { user: req.user })
+})
+
+app.get('/thermos/add', (req, res) => {
+    res.render('addThermos', { user: req.user })
+})
+
+app.post('/device/add', async (req, res) => {
+    const { name, deviceType, brand, connectionType,localisation, status } = req.body
+    const userType = req.user?.userType
+    const userId = req.user?.id
+  
+    try {
+      await con.query(`
+        INSERT INTO public."Device" 
+        (name, "deviceType", brand, "connectionType",localisation, status, "batteryLevel", "lastInteraction", demandesuppr)
+        VALUES ($1, $2, $3, $4, $5, $6, 100, NOW(), false)
+      `, [name, deviceType, brand, connectionType,localisation, status])
+
+
+      updatePoints(userId)
+      req.flash('success_msg', 'Objet ajouté avec succès !')
+      res.redirect(`/users/listeObjets${userType.charAt(0).toUpperCase() + userType.slice(1)}`)
+    } catch (err) {
+      console.error(err)
+      req.flash('error_msg', 'Erreur lors de l\'ajout de l\'objet')
+      res.redirect(`/users/listeObjets${userType.charAt(0).toUpperCase() + userType.slice(1)}`)
+    }
   })
+
+  app.post('/thermos/add', async (req, res) => {
+    const { name, brand, connectionType,localisation, goalTemp, status } = req.body
+    const userType = req.user?.userType
+    const userId = req.user?.id
+  
+    try {
+      await con.query(`
+        INSERT INTO public."Thermostats" 
+        (name, brand, "connectionType",localisation, "goalTemp", status, "batteryLevel", "lastInteraction", demandesuppr)
+        VALUES ($1, $2, $3, $4, $5, $6, 100, NOW(), false)
+      `, [name, brand, connectionType,localisation,goalTemp, status])
+
+
+      updatePoints(userId)
+      req.flash('success_msg', 'Thermos ajouté avec succès !')
+      res.redirect(`/users/listeThermos${userType.charAt(0).toUpperCase() + userType.slice(1)}`)
+    } catch (err) {
+      console.error(err)
+      req.flash('error_msg', 'Erreur lors de l\'ajout de l\'objet')
+      res.redirect(`/users/listeThermos${userType.charAt(0).toUpperCase() + userType.slice(1)}`)
+    }
+})
+
+app.get('/users/stats', async (req, res) => {
+    try {
+      const [tempResult, devicesResult, thermosResult] = await Promise.all([
+        con.query(`SELECT AVG("currentTemp") FROM public."Thermostats"`),
+        con.query(`SELECT status FROM public."Device"`),
+        con.query(`SELECT status FROM public."Thermostats"`)
+      ])
+  
+      const moyenneTemp = parseFloat(tempResult.rows[0].avg).toFixed(2)
+  
+      const devices = devicesResult.rows
+      const thermos = thermosResult.rows
+  
+      const nbDevicesActifs = devices.filter(d => d.status === 'Actif').length
+      const nbDevicesInactifs = devices.filter(d => d.status === 'Inactif').length
+  
+      const nbThermosActifs = thermos.filter(t => t.status === 'Actif').length
+      const nbThermosInactifs = thermos.filter(t => t.status === 'Inactif').length
+  
+      // ⚡ Consommation avec variation
+      const deviceConso = nbDevicesActifs * (200 + Math.random() * 40 - 20) // ±20W
+      const thermoConso = nbThermosActifs * (50 + Math.random() * 20 - 10)  // ±10W
+      const consommationTotale = Math.round(deviceConso + thermoConso)
+  
+      res.render('stats.ejs', {
+        user: req.user,
+        moyenneTemp,
+        nbDevicesActifs,
+        nbDevicesInactifs,
+        nbThermosActifs,
+        nbThermosInactifs,
+        consommationTotale
+      })
+    } catch (err) {
+      console.error(err)
+      res.status(500).send("Erreur lors de la récupération des statistiques.")
+    }
+  })
+  
 
 app.get('/users/profil', (req,res)=>{
     res.render('profil.ejs', {user: req.user})

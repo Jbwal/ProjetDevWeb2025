@@ -8,6 +8,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+
+    <% if (success_msg) { %>
+        <div class="alert alert-success"><%= success_msg %></div>
+    <% } %>
+    <% if (error_msg) { %>
+        <div class="alert alert-danger"><%= error_msg %></div>
+    <% } %>
+
     <!-- Page Dashboard -->
     <div class="dashboard">
         <header class="admin-header">
@@ -81,7 +89,9 @@
                         <input type="text" id="search-input" placeholder="Rechercher un objet...">
                         <button class="btn btn-search" id="search-button">Rechercher</button>
                     </div>
-                    
+                    <a href="/device/add">
+                        <button>➕ Ajouter un objet</button>
+                    </a>
                     <!-- Liste des objets -->
                     <div class="objects-container" id="objects-list">
                         <!-- Les objets seront ajoutés ici dynamiquement -->
@@ -92,6 +102,7 @@
                                     <th>Nom</th>
                                     <th>Type</th>
                                     <th>Marque</th>
+                                    <th>Localisation</th>
                                     <th>Status</th>
                                     <th>Type de connexion</th>
                                     <th>Niveau de Batterie</th>
@@ -102,16 +113,31 @@
                             <tbody>
                                 <% devices.forEach(device => { %>
                                     <tr>
-                                        <td><%= device.id %></td>
+                                        <td><%= device.id %>
+                                        <br>
+                                        <% if (device.demandesuppr) { %>
+                                            <p>Suppression demandée !</p>
+                                        <%}%>
+                                        </td>
                                         <td><%= device.name %></td>
                                         <td><%= device.deviceType %></td>
                                         <td><%= device.brand %></td>
+                                        <td><%= device.localisation %></td>
                                         <td><%= device.status %></td>
                                         <td><%= device.connectionType %></td>
                                         <td><%= device.batteryLevel.toFixed(2) %>%</td>
                                         <td><%= new Date(device.lastInteraction).toLocaleString('fr-FR') %></td>
                                         <td>
                                             <button class="delete-btn" data-id="<%= device.id %>">Supprimer</button>
+                                            <form action="/device/toggle/<%= device.id %>" method="POST" style="display:inline;">
+                                                <button type="submit">
+                                                  Passer en <%= device.status === 'Actif' ? 'Inactif' : 'Actif' %>
+                                                </button>
+                                            </form>
+                                            <a href="/device/edit/<%= device.id %>">
+                                                <button>Modifier</button>
+                                            </a>
+                                            </div>
                                         </td>
                                     </tr>
                                 <% }) %>
@@ -142,7 +168,7 @@
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                         // message flash
                         const flash = document.createElement('div')
-                        flash.textContent = "Utilisateur supprimé avec succès !"
+                        flash.textContent = "Objet supprimé avec succès !"
                         flash.style.background = "green"
                         flash.style.color = "white"
                         flash.style.padding = "10px"
@@ -208,6 +234,7 @@
             // Initialiser l'input avec le terme de recherche actuel
             populateSearchInput();
         });
+
     </script>
     <script src="../js/scriptindex.js"></script>
     <script src="scriptobjet.js"></script>

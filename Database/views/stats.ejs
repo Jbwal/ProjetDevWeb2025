@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Statistiques</title>
+  <link rel="stylesheet" href="/style/da.css"> <!-- ou ton CSS global -->
+</head>
+<body>
+  <h1>📊 Statistiques générales</h1>
+
+  <p>🌡️ Température moyenne des thermostats : <strong><%= moyenneTemp %> °C</strong></p>
+
+  <h2>📦 Objets connectés</h2>
+  <ul>
+    <li>Objets actifs : <strong><%= nbDevicesActifs %></strong></li>
+    <li>Objets inactifs : <strong><%= nbDevicesInactifs %></strong></li>
+  </ul>
+
+  <h2>🌡️ Thermostats</h2>
+  <ul>
+    <li>Thermostats actifs : <strong><%= nbThermosActifs %></strong></li>
+    <li>Thermostats inactifs : <strong><%= nbThermosInactifs %></strong></li>
+  </ul>
+
+  <h2>⚡ Consommation électrique estimée</h2>
+  <p><strong><%= consommationTotale %> W</strong></p>
+</body>
+</html>

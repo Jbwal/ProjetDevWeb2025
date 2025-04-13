@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Templar Hotel - Luxe & Élégance</title>
+    <link rel="stylesheet" href="/style/daformobjet.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<h2>Ajouter un objet</h2>
+
+<form action="/device/add" method="POST">
+  <label>Nom :</label>
+  <input type="text" name="name" required><br>
+
+  <label>Type d'appareil :</label>
+  <input type="text" name="deviceType" required><br>
+
+  <label>Marque :</label>
+  <input type="text" name="brand" required><br>
+
+  <label>Type de connexion :</label>
+  <input type="text" name="connectionType" required><br>
+
+  <label>Localisation :</label>
+  <input type="text" name="localisation" required><br>
+
+  <label>Status :</label>
+  <select name="status" required>
+    <option value="Actif">Actif</option>
+    <option value="Inactif">Inactif</option>
+  </select><br>
+
+  <button type="submit">Ajouter</button>
+</form>
+</body>
+</html>

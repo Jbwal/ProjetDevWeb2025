@@ -319,3 +319,101 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+/* Style spécifique pour le bouton Statistiques */
+a[href="/users/stats"] button {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 6px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1.5rem auto;
+    width: fit-content;
+    min-width: 200px;
+}
+
+a[href="/users/stats"] button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background-color: var(--accent);
+    transition: all 0.3s ease;
+    z-index: -1;
+}
+
+a[href="/users/stats"] button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(156, 136, 97, 0.3);
+}
+
+a[href="/users/stats"] button:hover::before {
+    left: 0;
+}
+
+a[href="/users/stats"] button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Effet spécial pour l'icône de statistiques */
+a[href="/users/stats"] button i,
+a[href="/users/stats"] button::first-letter {
+    margin-right: 8px;
+    transition: transform 0.3s ease;
+    display: inline-block;
+}
+
+a[href="/users/stats"] button:hover i,
+a[href="/users/stats"] button:hover::first-letter {
+    transform: scale(1.2);
+}
+
+/* Style pour repositionner le bouton statistiques plus bas */
+section.admin-cards {
+    position: relative;
+    padding-bottom: 120px; /* Augmenté pour plus d'espace */
+}
+
+a[href="/users/stats"] {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    position: absolute;
+    bottom: 40px; /* Déplacé plus bas */
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+}
+
+/* Responsive design pour le bouton */
+@media (max-width: 768px) {
+    a[href="/users/stats"] button {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.9rem;
+        width: 80%;
+    }
+    
+    section.admin-cards {
+        padding-bottom: 100px; /* Ajusté pour mobile */
+    }
+    
+    a[href="/users/stats"] {
+        bottom: 30px; /* Ajusté pour mobile */
+    }
+}
