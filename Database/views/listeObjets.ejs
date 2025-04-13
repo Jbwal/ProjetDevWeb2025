@@ -107,7 +107,7 @@
                                         <td><%= device.brand %></td>
                                         <td><%= device.status %></td>
                                         <td><%= device.connectionType %></td>
-                                        <td><%= device.batteryLevel %></td>
+                                        <td><%= device.batteryLevel.toFixed(2) %>%</td>
                                         <td><%= new Date(device.lastInteraction).toLocaleString('fr-FR') %></td>
                                     </tr>
                                 <% }) %>

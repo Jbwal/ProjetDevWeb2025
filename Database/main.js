@@ -1,5 +1,6 @@
 const {Client}=require('pg')
 const { pool } = require("./dbConfig")
+const { updateBatteryLevels } = require('./batteryService')
 const express = require('express')
 const bcrypt = require('bcrypt')
 const session = require('express-session')
@@ -10,6 +11,7 @@ const crypto = require('crypto')
 const path = require('path')
 const multer = require('multer')
 const fs = require('fs')
+const cron = require('node-cron')
 
 const initializePassport = require('./passportConfig')
 
@@ -39,6 +41,10 @@ app.use((req, res, next) => {
     res.locals.error = req.flash('error');
     next();
 });
+
+cron.schedule('*/10 * * * * *', () =>{
+    updateBatteryLevels()
+})
 
 const storage = multer.diskStorage({
     destination: './public/img/',
