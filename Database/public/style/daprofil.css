@@ -170,7 +170,7 @@ body {
     border-radius: 4px;
     transition: var(--transition);
     background-color: rgba(156, 136, 97, 0.1);
-    position: absolute;
+    position: relative;
     left: 1;
 }
 
