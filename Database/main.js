@@ -274,7 +274,7 @@ app.get('/fetchData',(req,res)=>{
                 {
                     res.send(err)
                 }else{
-                    res.render('listeUtilisateursAdmin', { users: result.rows })
+                    res.render('listeUtilisateursAdmin', { users: result.rows, user: req.user })
                 }
         })
     }
@@ -295,7 +295,7 @@ app.get('/fetchData',(req,res)=>{
                 {
                     res.send(err)
                 }else{
-                    res.render('listeUtilisateursSimple', { users: result.rows })
+                    res.render('listeUtilisateursSimple', { users: result.rows, user: req.user })
                 }
         })
     }
@@ -583,6 +583,49 @@ app.get('/users/dashboardAdmin', async (req,res)=>{
     }
 })
 
+app.get('/users/profil/:id', async (req, res) => {
+    const userId = req.params.id;
+  
+    try {
+      const result = await con.query(
+        `SELECT * FROM public."UserHotel" WHERE id = $1`,
+        [userId]
+      )
+  
+      const puser = result.rows[0]
+  
+      res.render('profilpublic.ejs', { user: req.user, puser })
+    } catch (err) {
+      console.error(err)
+      res.status(500).send('Erreur serveur')
+    }
+})
+
+app.get('/users/liste', async (req, res) => {
+    const search = req.query.search || ''
+    try {
+      let result
+      if (search) {
+        result = await con.query(
+          `SELECT * FROM public."UserHotel" WHERE login ILIKE $1`,
+          [`%${search}%`]
+        )
+      } else {
+        result = await con.query(`SELECT * FROM public."UserHotel"`)
+      }
+      let type = req.user?.userType
+      if(type == 'complexe')
+        type = 'simple'
+      res.render(`listeUtilisateurs${type.charAt(0).toUpperCase() + type.slice(1)}.ejs`, {
+        user: req.user,
+        users: result.rows,
+        search 
+      })
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Erreur serveur')
+    }
+  })
 
 app.get('/users/profil', (req,res)=>{
     res.render('profil.ejs', {user: req.user})

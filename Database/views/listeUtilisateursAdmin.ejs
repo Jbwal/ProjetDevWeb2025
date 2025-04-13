@@ -27,6 +27,11 @@
         </button>
     </div>
 
+    <form action="/users/liste" method="GET" class="search-form">
+        <input type="text" name="search" placeholder="Rechercher un utilisateur" value="<%= typeof search !== 'undefined' ? search : '' %>">
+        <button type="submit"><i class="fas fa-search"></i> Rechercher</button>
+    </form>
+
     <table id="">
         <thead>
             <tr>
@@ -54,6 +59,9 @@
                             <input type="number" name="points" value="<%= user.pointsTotal %>" step="0.25" min="0" />
                             <button type="submit">Modifier</button>
                         </form>
+                        <a href="/users/profil/<%= user.id %>" class="btn-profil">
+                            <i class="fas fa-user"></i> Profil
+                        </a>
                     </td>
                 </tr>
             <% }) %>

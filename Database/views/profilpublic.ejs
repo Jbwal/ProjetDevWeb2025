@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil de <%= puser.login %></title>
+    <link rel="stylesheet" href="/style/daprofil.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="header-container">
+        <a href="/users/dashboard<%= user.userType.charAt(0).toUpperCase() + user.userType.slice(1) %>" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Retour
+        </a>
+    </div>
+    <% if (success_msg && success_msg.length > 0) { %>
+        <br><br><br>
+        <div class="success-message">
+            <i class="fas fa-check-circle"></i> <%= success_msg %>
+        </div>
+    <% } %>
+    <br>
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <img src="<%=puser.img%>" alt="Photo de profil utilisateur">
+            </div>
+            <h1><%= puser.login %></h1>
+        </div>
+        
+        <div class="profile-body">
+            <div class="profile-info">
+                <div class="info-item">
+                    <div class="info-label">Login</div>
+                    <div class="info-value"><%= puser.login %></div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">E-mail</div>
+                    <div class="info-value"><%= puser.email %></div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Type</div>
+                    <div class="info-value"><%= puser.userType %></div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">Dernière connexion</div>
+                    <div class="info-value"><%= new Date(puser.last_login).toLocaleString('fr-FR') %></div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
