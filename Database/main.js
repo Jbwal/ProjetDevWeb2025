@@ -336,7 +336,36 @@ app.get('/users/listeObjets', (req, res) => {
     })
 })
 
-app.get('/users/listeTermos', (req, res) => {
+app.get('/users/listeObjetsAdmin', (req, res) => {
+    // Vérification du type d'utilisateur
+    // Récupération du terme de recherche
+    const recherche = req.query.search || '';
+
+    // Requête SQL pour les administrateurs (peut avoir des informations supplémentaires)
+    let fetch_query = `SELECT * FROM public."Device"`
+    const params =[]
+
+    // Ajout de la condition de recherche si un terme est fourni
+    if (recherche) {
+        fetch_query += ` WHERE name LIKE $1 OR "deviceType" LIKE $1 OR brand LIKE $1 OR status LIKE $1`
+        params.push(`%${recherche}%`)
+    }
+
+    con.query(fetch_query, params, (err, result) => {
+        if (err) {
+            res.send(err)
+        } else {
+            // Rendu de la page avec les données des appareils et l'utilisateur courant
+            res.render('listeObjetsAdmin', { 
+                devices: result.rows,
+                user: req.user,
+                recherche: recherche //renvoie le terme de recherche
+            })
+        }
+    })
+})
+
+app.get('/users/listeThermos', (req, res) => {
     // Vérification du type d'utilisateur
     // Récupération du terme de recherche
     const recherche = req.query.search || '';
@@ -356,7 +385,36 @@ app.get('/users/listeTermos', (req, res) => {
             res.send(err)
         } else {
             // Rendu de la page avec les données des appareils et l'utilisateur courant
-            res.render('listeTermos', { 
+            res.render('listeThermos', { 
+                devices: result.rows,
+                user: req.user,
+                recherche: recherche //renvoie le terme de recherche
+            })
+        }
+    })
+})
+
+app.get('/users/listeThermosAdmin', (req, res) => {
+    // Vérification du type d'utilisateur
+    // Récupération du terme de recherche
+    const recherche = req.query.search || '';
+
+    // Requête SQL pour les administrateurs (peut avoir des informations supplémentaires)
+    let fetch_query = `SELECT * FROM public."Thermostats"`
+    const params =[]
+
+    // Ajout de la condition de recherche si un terme est fourni
+    if (recherche) {
+        fetch_query += ` WHERE name LIKE $1 OR brand LIKE $1 OR status LIKE $1`
+        params.push(`%${recherche}%`)
+    }
+
+    con.query(fetch_query, params, (err, result) => {
+        if (err) {
+            res.send(err)
+        } else {
+            // Rendu de la page avec les données des appareils et l'utilisateur courant
+            res.render('listeThermosAdmin', { 
                 devices: result.rows,
                 user: req.user,
                 recherche: recherche //renvoie le terme de recherche
@@ -477,6 +535,32 @@ app.post('/updatePoints/:id', (req, res) => {
 app.delete('/delete/:id',(req,res)=>{
     const id = req.params.id
     const delete_query = 'DELETE FROM public."UserHotel" WHERE id = $1'
+    con.query(delete_query,[id],(err,result)=>{
+        if(err)
+            {
+                res.send(err)
+            }else{
+                res.send(result)
+            }
+    })
+})
+
+app.delete('/deletedevice/:id',(req,res)=>{
+    const id = req.params.id
+    const delete_query = 'DELETE FROM public."Device" WHERE id = $1'
+    con.query(delete_query,[id],(err,result)=>{
+        if(err)
+            {
+                res.send(err)
+            }else{
+                res.send(result)
+            }
+    })
+})
+
+app.delete('/deletethermo/:id',(req,res)=>{
+    const id = req.params.id
+    const delete_query = 'DELETE FROM public."Thermostats" WHERE id = $1'
     con.query(delete_query,[id],(err,result)=>{
         if(err)
             {

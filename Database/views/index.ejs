@@ -31,9 +31,15 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/users/login" class="nav-link" data-page="forum">
-                                <i class="fas fa-comments"></i> Forum
-                            </a>
+                            <% if (user) { %>
+                                <a href="/users/forum" class="nav-link" data-page="forum">
+                                    <i class="fas fa-comments"></i> Forum
+                                </a>
+                            <% } else { %>
+                                <a href="/users/login" class="nav-link" data-page="forum">
+                                    <i class="fas fa-comments"></i> Forum
+                                </a>
+                            <% }%>
                         </li>
                         <li class="nav-item">
                             <a href="/users/listeObjets" class="nav-link" data-page="objets">

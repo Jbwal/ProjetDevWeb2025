@@ -71,11 +71,10 @@
         
         <div class="dashboard-content">
             <div class="dashboard-card">
-                <h2 class="dashboard-title">Objets Disponibles</h2>
-                <% if (user) { %>
+                <h2 class="dashboard-title">Thermomètres Disponibles</h2>
                     <!-- Barre de recherche -->
-                    <a href="/users/listeThermos" class="login-button">
-                        <i class="fa-solid fa-temperature-empty"></i> Thermomètres
+                    <a href="/users/listeObjetsAdmin" class="login-button">
+                        <i class="fa-solid fa-box"></i> Objets
                     </a>
                     <div class="search-container">
                         <input type="text" id="search-input" placeholder="Rechercher un objet...">
@@ -90,12 +89,14 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Nom</th>
-                                    <th>Type</th>
                                     <th>Marque</th>
                                     <th>Status</th>
                                     <th>Type de connexion</th>
                                     <th>Niveau de Batterie</th>
+                                    <th>Température Actuelle</th>
+                                    <th>Température Cible</th>
                                     <th>Dernière Interaction</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -103,71 +104,108 @@
                                     <tr>
                                         <td><%= device.id %></td>
                                         <td><%= device.name %></td>
-                                        <td><%= device.deviceType %></td>
                                         <td><%= device.brand %></td>
                                         <td><%= device.status %></td>
                                         <td><%= device.connectionType %></td>
-                                        <td><%= device.batteryLevel.toFixed(2) %>%</td>
+                                        <td><%= device.batteryLevel %></td>
+                                        <td><%= device.currentTemp %></td>
+                                        <td><%= device.goalTemp %></td>
                                         <td><%= new Date(device.lastInteraction).toLocaleString('fr-FR') %></td>
+                                        <td>
+                                            <button class="delete-btn" data-id="<%= device.id %>">Supprimer</button>
+                                        </td>
                                     </tr>
                                 <% }) %>
                             </tbody>
                         </table>
                     </div>
-                <% } else {%>
-                    <p class="login-required-message">Connectez-vous pour voir tous les détails des objets disponibles.</p>
-                <% } %>
             </div>
         </div>
     </div>
     <script>
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', async () => {
+                const deviceID = button.dataset.id
+                const confirmDelete = confirm("Es-tu sûr de vouloir supprimer ce objet ?")
+        
+                if (confirmDelete) {
+                    const response = await fetch(`/deletethermo/${deviceID}`, {
+                        method: 'DELETE'
+                    });
+        
+                    if (response.ok) {
+                        // supprimer ligne
+                        button.closest('tr').remove()
+                        
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        // message flash
+                        const flash = document.createElement('div')
+                        flash.textContent = "Utilisateur supprimé avec succès !"
+                        flash.style.background = "green"
+                        flash.style.color = "white"
+                        flash.style.padding = "10px"
+                        flash.style.textAlign = "center"
+                        flash.style.margin = "10px auto"
+                        flash.style.width = "50%"
+                        flash.style.borderRadius = "5px"
+        
+                        document.body.prepend(flash)
+        
+                        setTimeout(() => flash.remove(), 3000)
+                    } else {
+                        alert("Une erreur est survenue lors de la suppression.")
+                    }
+                }
+            })
+        })
+
         document.addEventListener('DOMContentLoaded', function() {
-    // Récupérer les éléments du DOM
-    const searchButton = document.getElementById('search-button');
-    const searchInput = document.getElementById('search-input');
+            // Récupérer les éléments du DOM
+            const searchButton = document.getElementById('search-button');
+            const searchInput = document.getElementById('search-input');
 
-    // Ajouter un écouteur d'événement au bouton de recherche
-    searchButton.addEventListener('click', function() {
-        performSearch();
-    });
+            // Ajouter un écouteur d'événement au bouton de recherche
+            searchButton.addEventListener('click', function() {
+                performSearch();
+            });
 
-    // Ajouter un écouteur d'événement pour la touche Entrée dans l'input
-    searchInput.addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-            performSearch();
-        }
-    });
+            // Ajouter un écouteur d'événement pour la touche Entrée dans l'input
+            searchInput.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    performSearch();
+                }
+            });
 
-    // Fonction pour effectuer la recherche
-    function performSearch() {
-        // Récupérer la valeur de l'input
-        const searchTerm = searchInput.value.trim();
-        
-        // Construire l'URL avec le paramètre de recherche
-        let url = '/users/listeObjets';
-        
-        // Ajouter le paramètre de recherche si un terme est fourni
-        if (searchTerm) {
-            url += `?search=${encodeURIComponent(searchTerm)}`;
-        }
-        
-        // Rediriger vers l'URL construite
-        window.location.href = url;
-    }
+            // Fonction pour effectuer la recherche
+            function performSearch() {
+                // Récupérer la valeur de l'input
+                const searchTerm = searchInput.value.trim();
+                
+                // Construire l'URL avec le paramètre de recherche
+                let url = '/users/listeThermosAdmin';
+                
+                // Ajouter le paramètre de recherche si un terme est fourni
+                if (searchTerm) {
+                    url += `?search=${encodeURIComponent(searchTerm)}`;
+                }
+                
+                // Rediriger vers l'URL construite
+                window.location.href = url;
+            }
 
-    // Si un terme de recherche existe déjà dans l'URL, le mettre dans l'input
-    function populateSearchInput() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const searchParam = urlParams.get('search');
-        
-        if (searchParam) {
-            searchInput.value = searchParam;
-        }
-    }
+            // Si un terme de recherche existe déjà dans l'URL, le mettre dans l'input
+            function populateSearchInput() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const searchParam = urlParams.get('search');
+                
+                if (searchParam) {
+                    searchInput.value = searchParam;
+                }
+            }
 
-    // Initialiser l'input avec le terme de recherche actuel
-    populateSearchInput();
-});
+            // Initialiser l'input avec le terme de recherche actuel
+            populateSearchInput();
+        });
     </script>
     <script src="../js/scriptindex.js"></script>
     <script src="scriptobjet.js"></script>

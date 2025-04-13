@@ -28,9 +28,15 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/forum" class="nav-link" data-page="forum">
-                            <i class="fas fa-comments"></i> Forum
-                        </a>
+                        <% if (user) { %>
+                            <a href="/users/forum" class="nav-link" data-page="forum">
+                                <i class="fas fa-comments"></i> Forum
+                            </a>
+                        <% } else { %>
+                            <a href="/users/login" class="nav-link" data-page="forum">
+                                <i class="fas fa-comments"></i> Forum
+                            </a>
+                        <% }%>
                     </li>
                     <li class="nav-item">
                         <a href="/users/listeObjets" class="nav-link active" data-page="objets">
@@ -66,7 +72,6 @@
         <div class="dashboard-content">
             <div class="dashboard-card">
                 <h2 class="dashboard-title">Thermomètres Disponibles</h2>
-                <% if (user) { %>
                     <a href="/users/listeObjets" class="login-button">
                         <i class="fa-solid fa-box"></i> Objets
                     </a>
@@ -110,9 +115,6 @@
                             </tbody>
                         </table>
                     </div>
-                <% } else {%>
-                    <p class="login-required-message">Connectez-vous pour voir tous les détails des objets disponibles.</p>
-                <% } %>
             </div>
         </div>
     </div>
@@ -140,7 +142,7 @@
         const searchTerm = searchInput.value.trim();
         
         // Construire l'URL avec le paramètre de recherche
-        let url = '/users/listeTermos';
+        let url = '/users/listeThermos';
         
         // Ajouter le paramètre de recherche si un terme est fourni
         if (searchTerm) {
